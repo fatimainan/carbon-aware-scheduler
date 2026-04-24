@@ -24,3 +24,4 @@ docker/docker-static
 docker/*.tgz
 docker/*.tar
 docker/*.gz
+docker/docker/
