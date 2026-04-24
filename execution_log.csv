@@ -1,0 +1,11 @@
+timestamp,zone,carbon_intensity,threshold,decision,delay_seconds,execution_status,execution_duration_ms,action_name,task_name,error
+2026-04-19T19:10:09.972980+00:00,DE,85.0,200.0,execute,,executed,0.31,data_processor,carbon-aware-batch,
+2026-04-19T19:10:10.483975+00:00,DE,110.0,200.0,execute,,executed,0.17,data_processor,carbon-aware-batch,
+2026-04-19T19:10:10.988140+00:00,DE,160.0,200.0,execute,,executed,0.17,data_processor,carbon-aware-batch,
+2026-04-19T19:10:11.492765+00:00,DE,210.0,200.0,delay,30,delayed,,data_processor,carbon-aware-batch,
+2026-04-19T19:10:41.995966+00:00,DE,275.0,200.0,delay,30,delayed,,data_processor,carbon-aware-batch,
+2026-04-19T19:11:12.499471+00:00,DE,320.0,200.0,delay,30,delayed,,data_processor,carbon-aware-batch,
+2026-04-19T19:11:43.002875+00:00,DE,180.0,200.0,execute,,executed,0.19,data_processor,carbon-aware-batch,
+2026-04-19T19:11:43.506897+00:00,DE,95.0,200.0,execute,,executed,0.16,data_processor,carbon-aware-batch,
+2026-04-19T19:11:44.011223+00:00,DE,240.0,200.0,delay,30,delayed,,data_processor,carbon-aware-batch,
+2026-04-19T19:12:14.514951+00:00,DE,130.0,200.0,execute,,executed,0.18,data_processor,carbon-aware-batch,

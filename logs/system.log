@@ -1,0 +1,402 @@
+2026-04-20 19:16:34,983  INFO      __main__                          Mode      : SIMULATION
+2026-04-20 19:16:34,983  INFO      __main__                          Zone      : DE
+2026-04-20 19:16:34,983  INFO      __main__                          Threshold : 200.0 gCO2/kWh
+2026-04-20 19:16:34,984  INFO      __main__                          Cycles    : 20
+2026-04-20 19:16:34,984  INFO      __main__                          Delay     : 30s when carbon > threshold
+2026-04-20 19:16:34,985  INFO      scheduler.carbon_scheduler      [Scheduler] RuleBasedScheduler initialised  threshold=200.0 gCO2/kWh  delay=30s
+2026-04-20 19:16:34,987  INFO      executor.executor               [Executor] Created log file: logs/execution_log.csv
+2026-04-20 19:16:34,987  INFO      __main__                          [Simulation] Using 10 pre-defined data points.
+2026-04-20 19:16:34,990  INFO      __main__                        [Main] Simulated reading: 85.0 gCO2/kWh (zone=DE)
+2026-04-20 19:16:34,991  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=85.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-20 19:16:34,994  INFO      executor.executor               ======================================================================
+2026-04-20 19:16:39,070  WARNING   executor.executor               [OW] OpenWhisk not reachable at http://localhost:3233 � running action locally.
+2026-04-20 19:16:39,118  INFO      executor.executor               ======================================================================
+2026-04-20 19:16:39,118  INFO      __main__                        [Main] Execution outcome: status=executed  duration=None ms
+2026-04-20 19:16:39,622  INFO      __main__                        [Main] Simulated reading: 110.0 gCO2/kWh (zone=DE)
+2026-04-20 19:16:39,623  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=110.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-20 19:16:39,624  INFO      executor.executor               ======================================================================
+2026-04-20 19:16:43,692  WARNING   executor.executor               [OW] OpenWhisk not reachable at http://localhost:3233 � running action locally.
+2026-04-20 19:16:43,720  INFO      executor.executor               ======================================================================
+2026-04-20 19:16:43,720  INFO      __main__                        [Main] Execution outcome: status=executed  duration=None ms
+2026-04-20 19:16:44,225  INFO      __main__                        [Main] Simulated reading: 160.0 gCO2/kWh (zone=DE)
+2026-04-20 19:16:44,226  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=160.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-20 19:16:44,230  INFO      executor.executor               ======================================================================
+2026-04-20 19:16:48,280  WARNING   executor.executor               [OW] OpenWhisk not reachable at http://localhost:3233 � running action locally.
+2026-04-20 19:16:48,289  INFO      executor.executor               ======================================================================
+2026-04-20 19:16:48,289  INFO      __main__                        [Main] Execution outcome: status=executed  duration=None ms
+2026-04-20 19:16:48,793  INFO      __main__                        [Main] Simulated reading: 210.0 gCO2/kWh (zone=DE)
+2026-04-20 19:16:48,793  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=210.0  threshold=200.0  decision=DELAY    zone=DE
+2026-04-20 19:16:48,794  INFO      executor.executor               ======================================================================
+2026-04-20 19:17:07,789  INFO      __main__                          Mode      : SIMULATION
+2026-04-20 19:17:07,789  INFO      __main__                          Zone      : DE
+2026-04-20 19:17:07,789  INFO      __main__                          Threshold : 200.0 gCO2/kWh
+2026-04-20 19:17:07,789  INFO      __main__                          Cycles    : 20
+2026-04-20 19:17:07,789  INFO      __main__                          Delay     : 30s when carbon > threshold
+2026-04-20 19:17:07,790  INFO      scheduler.carbon_scheduler      [Scheduler] RuleBasedScheduler initialised  threshold=200.0 gCO2/kWh  delay=30s
+2026-04-20 19:17:07,790  INFO      __main__                          [Simulation] Using 10 pre-defined data points.
+2026-04-20 19:17:07,791  INFO      __main__                        [Main] Simulated reading: 85.0 gCO2/kWh (zone=DE)
+2026-04-20 19:17:07,792  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=85.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-20 19:17:07,793  INFO      executor.executor               ======================================================================
+2026-04-20 19:17:11,855  WARNING   executor.executor               [OW] OpenWhisk not reachable at http://localhost:3233 � running action locally.
+2026-04-20 19:17:11,883  INFO      executor.executor               ======================================================================
+2026-04-20 19:17:11,883  INFO      __main__                        [Main] Execution outcome: status=executed  duration=None ms
+2026-04-20 19:17:12,389  INFO      __main__                        [Main] Simulated reading: 110.0 gCO2/kWh (zone=DE)
+2026-04-20 19:17:12,389  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=110.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-20 19:17:12,393  INFO      executor.executor               ======================================================================
+2026-04-20 19:17:16,458  WARNING   executor.executor               [OW] OpenWhisk not reachable at http://localhost:3233 � running action locally.
+2026-04-20 19:17:16,479  INFO      executor.executor               ======================================================================
+2026-04-20 19:17:16,479  INFO      __main__                        [Main] Execution outcome: status=executed  duration=None ms
+2026-04-20 19:17:16,983  INFO      __main__                        [Main] Simulated reading: 160.0 gCO2/kWh (zone=DE)
+2026-04-20 19:17:16,983  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=160.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-20 19:17:16,987  INFO      executor.executor               ======================================================================
+2026-04-20 19:17:18,809  INFO      executor.executor               ======================================================================
+2026-04-20 19:17:18,810  INFO      __main__                        [Main] Execution outcome: status=delayed  duration=None ms
+2026-04-20 19:17:19,316  INFO      __main__                        [Main] Simulated reading: 275.0 gCO2/kWh (zone=DE)
+2026-04-20 19:17:19,316  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=275.0  threshold=200.0  decision=DELAY    zone=DE
+2026-04-20 19:17:19,319  INFO      executor.executor               ======================================================================
+2026-04-20 19:17:21,061  WARNING   executor.executor               [OW] OpenWhisk not reachable at http://localhost:3233 � running action locally.
+2026-04-20 19:17:21,080  INFO      executor.executor               ======================================================================
+2026-04-20 19:17:21,080  INFO      __main__                        [Main] Execution outcome: status=executed  duration=None ms
+2026-04-20 19:17:21,585  INFO      __main__                        [Main] Simulated reading: 210.0 gCO2/kWh (zone=DE)
+2026-04-20 19:17:21,585  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=210.0  threshold=200.0  decision=DELAY    zone=DE
+2026-04-20 19:17:21,590  INFO      executor.executor               ======================================================================
+2026-04-20 19:17:49,342  INFO      executor.executor               ======================================================================
+2026-04-20 19:17:49,342  INFO      __main__                        [Main] Execution outcome: status=delayed  duration=None ms
+2026-04-20 19:17:49,848  INFO      __main__                        [Main] Simulated reading: 320.0 gCO2/kWh (zone=DE)
+2026-04-20 19:17:49,849  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=320.0  threshold=200.0  decision=DELAY    zone=DE
+2026-04-20 19:17:49,854  INFO      executor.executor               ======================================================================
+2026-04-20 19:17:51,618  INFO      executor.executor               ======================================================================
+2026-04-20 19:17:51,619  INFO      __main__                        [Main] Execution outcome: status=delayed  duration=None ms
+2026-04-20 19:17:52,125  INFO      __main__                        [Main] Simulated reading: 275.0 gCO2/kWh (zone=DE)
+2026-04-20 19:17:52,125  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=275.0  threshold=200.0  decision=DELAY    zone=DE
+2026-04-20 19:17:52,132  INFO      executor.executor               ======================================================================
+2026-04-20 19:18:19,874  INFO      executor.executor               ======================================================================
+2026-04-20 19:18:19,874  INFO      __main__                        [Main] Execution outcome: status=delayed  duration=None ms
+2026-04-20 19:18:20,379  INFO      __main__                        [Main] Simulated reading: 180.0 gCO2/kWh (zone=DE)
+2026-04-20 19:18:20,380  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=180.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-20 19:18:20,383  INFO      executor.executor               ======================================================================
+2026-04-20 19:18:24,414  WARNING   executor.executor               [OW] OpenWhisk not reachable at http://localhost:3233 � running action locally.
+2026-04-20 19:18:24,439  INFO      executor.executor               ======================================================================
+2026-04-20 19:18:24,439  INFO      __main__                        [Main] Execution outcome: status=executed  duration=None ms
+2026-04-20 19:18:24,943  INFO      __main__                        [Main] Simulated reading: 95.0 gCO2/kWh (zone=DE)
+2026-04-20 19:18:24,943  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=95.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-20 19:18:24,948  INFO      executor.executor               ======================================================================
+2026-04-20 19:19:03,529  INFO      __main__                          Mode      : SIMULATION
+2026-04-20 19:19:03,529  INFO      __main__                          Zone      : DE
+2026-04-20 19:19:03,529  INFO      __main__                          Threshold : 200.0 gCO2/kWh
+2026-04-20 19:19:03,529  INFO      __main__                          Cycles    : 20
+2026-04-20 19:19:03,529  INFO      __main__                          Delay     : 30s when carbon > threshold
+2026-04-20 19:19:03,529  INFO      scheduler.carbon_scheduler      [Scheduler] RuleBasedScheduler initialised  threshold=200.0 gCO2/kWh  delay=30s
+2026-04-20 19:19:03,530  INFO      __main__                          [Simulation] Using 10 pre-defined data points.
+2026-04-20 19:19:03,531  INFO      __main__                        [Main] Simulated reading: 85.0 gCO2/kWh (zone=DE)
+2026-04-20 19:19:03,531  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=85.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-20 19:19:03,532  INFO      executor.executor               ======================================================================
+2026-04-20 19:19:07,596  WARNING   executor.executor               [OW] OpenWhisk not reachable at http://localhost:3233 � running action locally.
+2026-04-20 19:19:07,629  INFO      executor.executor               ======================================================================
+2026-04-20 19:19:07,630  INFO      __main__                        [Main] Execution outcome: status=executed  duration=None ms
+2026-04-20 19:19:08,135  INFO      __main__                        [Main] Simulated reading: 110.0 gCO2/kWh (zone=DE)
+2026-04-20 19:19:08,135  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=110.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-20 19:19:08,138  INFO      executor.executor               ======================================================================
+2026-04-20 19:19:12,188  WARNING   executor.executor               [OW] OpenWhisk not reachable at http://localhost:3233 � running action locally.
+2026-04-20 19:19:12,202  INFO      executor.executor               ======================================================================
+2026-04-20 19:19:12,203  INFO      __main__                        [Main] Execution outcome: status=executed  duration=None ms
+2026-04-20 19:19:12,708  INFO      __main__                        [Main] Simulated reading: 160.0 gCO2/kWh (zone=DE)
+2026-04-20 19:19:12,708  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=160.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-20 19:19:12,712  INFO      executor.executor               ======================================================================
+2026-04-20 19:19:16,777  WARNING   executor.executor               [OW] OpenWhisk not reachable at http://localhost:3233 � running action locally.
+2026-04-20 19:19:16,794  INFO      executor.executor               ======================================================================
+2026-04-20 19:19:16,794  INFO      __main__                        [Main] Execution outcome: status=executed  duration=None ms
+2026-04-20 19:19:17,298  INFO      __main__                        [Main] Simulated reading: 210.0 gCO2/kWh (zone=DE)
+2026-04-20 19:19:17,298  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=210.0  threshold=200.0  decision=DELAY    zone=DE
+2026-04-20 19:19:17,300  INFO      executor.executor               ======================================================================
+2026-04-20 19:19:47,329  INFO      executor.executor               ======================================================================
+2026-04-20 19:19:47,330  INFO      __main__                        [Main] Execution outcome: status=delayed  duration=None ms
+2026-04-20 19:19:47,840  INFO      __main__                        [Main] Simulated reading: 275.0 gCO2/kWh (zone=DE)
+2026-04-20 19:19:47,841  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=275.0  threshold=200.0  decision=DELAY    zone=DE
+2026-04-20 19:19:47,852  INFO      executor.executor               ======================================================================
+2026-04-20 19:20:17,908  INFO      executor.executor               ======================================================================
+2026-04-20 19:20:17,909  INFO      __main__                        [Main] Execution outcome: status=delayed  duration=None ms
+2026-04-20 19:20:18,412  INFO      __main__                        [Main] Simulated reading: 320.0 gCO2/kWh (zone=DE)
+2026-04-20 19:20:18,412  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=320.0  threshold=200.0  decision=DELAY    zone=DE
+2026-04-20 19:20:18,420  INFO      executor.executor               ======================================================================
+2026-04-20 19:20:48,455  INFO      executor.executor               ======================================================================
+2026-04-20 19:20:48,455  INFO      __main__                        [Main] Execution outcome: status=delayed  duration=None ms
+2026-04-20 19:20:48,961  INFO      __main__                        [Main] Simulated reading: 180.0 gCO2/kWh (zone=DE)
+2026-04-20 19:20:48,961  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=180.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-20 19:20:48,965  INFO      executor.executor               ======================================================================
+2026-04-20 19:20:53,041  WARNING   executor.executor               [OW] OpenWhisk not reachable at http://localhost:3233 � running action locally.
+2026-04-20 19:20:53,065  INFO      executor.executor               ======================================================================
+2026-04-20 19:20:53,066  INFO      __main__                        [Main] Execution outcome: status=executed  duration=None ms
+2026-04-20 19:20:53,570  INFO      __main__                        [Main] Simulated reading: 95.0 gCO2/kWh (zone=DE)
+2026-04-20 19:20:53,571  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=95.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-20 19:20:53,574  INFO      executor.executor               ======================================================================
+2026-04-20 19:20:57,644  WARNING   executor.executor               [OW] OpenWhisk not reachable at http://localhost:3233 � running action locally.
+2026-04-20 19:20:57,652  INFO      executor.executor               ======================================================================
+2026-04-20 19:20:57,652  INFO      __main__                        [Main] Execution outcome: status=executed  duration=None ms
+2026-04-20 19:20:58,154  INFO      __main__                        [Main] Simulated reading: 240.0 gCO2/kWh (zone=DE)
+2026-04-20 19:20:58,154  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=240.0  threshold=200.0  decision=DELAY    zone=DE
+2026-04-20 19:20:58,155  INFO      executor.executor               ======================================================================
+2026-04-20 19:21:28,165  INFO      executor.executor               ======================================================================
+2026-04-20 19:21:28,166  INFO      __main__                        [Main] Execution outcome: status=delayed  duration=None ms
+2026-04-20 19:21:28,669  INFO      __main__                        [Main] Simulated reading: 130.0 gCO2/kWh (zone=DE)
+2026-04-20 19:21:28,669  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=130.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-20 19:21:28,672  INFO      executor.executor               ======================================================================
+2026-04-20 19:21:32,740  WARNING   executor.executor               [OW] OpenWhisk not reachable at http://localhost:3233 � running action locally.
+2026-04-20 19:21:32,770  INFO      executor.executor               ======================================================================
+2026-04-20 19:21:32,770  INFO      __main__                        [Main] Execution outcome: status=executed  duration=None ms
+2026-04-20 19:21:33,277  INFO      __main__                        [Main] Simulated reading: 85.0 gCO2/kWh (zone=DE)
+2026-04-20 19:21:33,278  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=85.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-20 19:21:33,286  INFO      executor.executor               ======================================================================
+2026-04-20 19:21:37,363  WARNING   executor.executor               [OW] OpenWhisk not reachable at http://localhost:3233 � running action locally.
+2026-04-20 19:21:37,400  INFO      executor.executor               ======================================================================
+2026-04-20 19:21:37,401  INFO      __main__                        [Main] Execution outcome: status=executed  duration=None ms
+2026-04-20 19:21:37,909  INFO      __main__                        [Main] Simulated reading: 110.0 gCO2/kWh (zone=DE)
+2026-04-20 19:21:37,910  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=110.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-20 19:21:37,918  INFO      executor.executor               ======================================================================
+2026-04-20 19:21:42,011  WARNING   executor.executor               [OW] OpenWhisk not reachable at http://localhost:3233 � running action locally.
+2026-04-20 19:21:42,035  INFO      executor.executor               ======================================================================
+2026-04-20 19:21:42,035  INFO      __main__                        [Main] Execution outcome: status=executed  duration=None ms
+2026-04-20 19:21:42,542  INFO      __main__                        [Main] Simulated reading: 160.0 gCO2/kWh (zone=DE)
+2026-04-20 19:21:42,542  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=160.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-20 19:21:42,549  INFO      executor.executor               ======================================================================
+2026-04-20 19:21:46,645  WARNING   executor.executor               [OW] OpenWhisk not reachable at http://localhost:3233 � running action locally.
+2026-04-20 19:21:46,687  INFO      executor.executor               ======================================================================
+2026-04-20 19:21:46,689  INFO      __main__                        [Main] Execution outcome: status=executed  duration=None ms
+2026-04-20 19:21:47,197  INFO      __main__                        [Main] Simulated reading: 210.0 gCO2/kWh (zone=DE)
+2026-04-20 19:21:47,198  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=210.0  threshold=200.0  decision=DELAY    zone=DE
+2026-04-20 19:21:47,204  INFO      executor.executor               ======================================================================
+2026-04-20 19:22:17,232  INFO      executor.executor               ======================================================================
+2026-04-20 19:22:17,233  INFO      __main__                        [Main] Execution outcome: status=delayed  duration=None ms
+2026-04-20 19:22:17,743  INFO      __main__                        [Main] Simulated reading: 275.0 gCO2/kWh (zone=DE)
+2026-04-20 19:22:17,744  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=275.0  threshold=200.0  decision=DELAY    zone=DE
+2026-04-20 19:22:17,753  INFO      executor.executor               ======================================================================
+2026-04-20 19:22:47,790  INFO      executor.executor               ======================================================================
+2026-04-20 19:22:47,791  INFO      __main__                        [Main] Execution outcome: status=delayed  duration=None ms
+2026-04-20 19:22:48,300  INFO      __main__                        [Main] Simulated reading: 320.0 gCO2/kWh (zone=DE)
+2026-04-20 19:22:48,301  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=320.0  threshold=200.0  decision=DELAY    zone=DE
+2026-04-20 19:22:48,311  INFO      executor.executor               ======================================================================
+2026-04-20 19:23:18,345  INFO      executor.executor               ======================================================================
+2026-04-20 19:23:18,346  INFO      __main__                        [Main] Execution outcome: status=delayed  duration=None ms
+2026-04-20 19:23:18,858  INFO      __main__                        [Main] Simulated reading: 180.0 gCO2/kWh (zone=DE)
+2026-04-20 19:23:18,860  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=180.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-20 19:23:18,870  INFO      executor.executor               ======================================================================
+2026-04-20 19:23:22,956  WARNING   executor.executor               [OW] OpenWhisk not reachable at http://localhost:3233 � running action locally.
+2026-04-20 19:23:23,001  INFO      executor.executor               ======================================================================
+2026-04-20 19:23:23,001  INFO      __main__                        [Main] Execution outcome: status=executed  duration=None ms
+2026-04-20 19:23:23,511  INFO      __main__                        [Main] Simulated reading: 95.0 gCO2/kWh (zone=DE)
+2026-04-20 19:23:23,512  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=95.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-20 19:23:23,519  INFO      executor.executor               ======================================================================
+2026-04-20 19:23:27,617  WARNING   executor.executor               [OW] OpenWhisk not reachable at http://localhost:3233 � running action locally.
+2026-04-20 19:23:27,662  INFO      executor.executor               ======================================================================
+2026-04-20 19:23:27,663  INFO      __main__                        [Main] Execution outcome: status=executed  duration=None ms
+2026-04-20 19:23:28,171  INFO      __main__                        [Main] Simulated reading: 240.0 gCO2/kWh (zone=DE)
+2026-04-20 19:23:28,171  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=240.0  threshold=200.0  decision=DELAY    zone=DE
+2026-04-20 19:23:28,178  INFO      executor.executor               ======================================================================
+2026-04-20 19:23:58,215  INFO      executor.executor               ======================================================================
+2026-04-20 19:23:58,215  INFO      __main__                        [Main] Execution outcome: status=delayed  duration=None ms
+2026-04-20 19:23:58,723  INFO      __main__                        [Main] Simulated reading: 130.0 gCO2/kWh (zone=DE)
+2026-04-20 19:23:58,724  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=130.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-20 19:23:58,736  INFO      executor.executor               ======================================================================
+2026-04-20 19:24:02,823  WARNING   executor.executor               [OW] OpenWhisk not reachable at http://localhost:3233 � running action locally.
+2026-04-20 19:24:02,894  INFO      executor.executor               ======================================================================
+2026-04-20 19:24:02,894  INFO      __main__                        [Main] Execution outcome: status=executed  duration=None ms
+2026-04-20 19:24:02,927  INFO      __main__                          Logs saved to: logs/execution_log.csv  &  logs/execution_log.json
+2026-04-24 14:19:08,319  INFO      __main__                        ╔══════════════════════════════════════════════════════════╗
+2026-04-24 14:19:08,319  INFO      __main__                        ║      Carbon-Aware Scheduling System  — STARTING         ║
+2026-04-24 14:19:08,320  INFO      __main__                        ╚══════════════════════════════════════════════════════════╝
+2026-04-24 14:19:08,320  INFO      __main__                          Mode      : SIMULATION
+2026-04-24 14:19:08,320  INFO      __main__                          Zone      : DE
+2026-04-24 14:19:08,320  INFO      __main__                          Threshold : 200.0 gCO2/kWh
+2026-04-24 14:19:08,320  INFO      __main__                          Cycles    : 10
+2026-04-24 14:19:08,320  INFO      __main__                          Delay     : 30s when carbon > threshold
+2026-04-24 14:19:08,320  INFO      scheduler.carbon_scheduler      [Scheduler] RuleBasedScheduler initialised  threshold=200.0 gCO2/kWh  delay=30s
+2026-04-24 14:19:08,320  INFO      __main__                          [Simulation] Using 10 pre-defined data points.
+2026-04-24 14:19:08,320  INFO      __main__                        
+─── Cycle 1 / 10 ─────────────────────────────────
+2026-04-24 14:19:08,320  INFO      __main__                        [Main] Simulated reading: 85.0 gCO2/kWh (zone=DE)
+2026-04-24 14:19:08,320  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=85.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-24 14:19:08,320  INFO      __main__                        [Main] Scheduler says: ✅ EXECUTE  |  carbon=85.0  threshold=200.0  margin=+115.0  zone=DE
+2026-04-24 14:19:08,320  INFO      executor.executor               ======================================================================
+2026-04-24 14:19:08,321  INFO      executor.executor               [Executor] Processing decision: ✅ EXECUTE  |  carbon=85.0  threshold=200.0  margin=+115.0  zone=DE
+2026-04-24 14:19:08,321  INFO      executor.executor               [Executor] 🟢 EXECUTING action 'data_processor'  (carbon=85.0 ≤ threshold=200.0)
+2026-04-24 14:19:08,378  INFO      executor.executor               [OW] Action 'data_processor' completed: success
+2026-04-24 14:19:08,379  INFO      executor.executor               [Executor] ✅ Event logged to CSV and JSON.
+2026-04-24 14:19:08,379  INFO      executor.executor               ======================================================================
+2026-04-24 14:19:08,379  INFO      __main__                        [Main] Execution outcome: status=executed  duration=0.2 ms
+2026-04-24 14:19:08,880  INFO      __main__                        
+─── Cycle 2 / 10 ─────────────────────────────────
+2026-04-24 14:19:08,880  INFO      __main__                        [Main] Simulated reading: 110.0 gCO2/kWh (zone=DE)
+2026-04-24 14:19:08,880  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=110.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-24 14:19:08,880  INFO      __main__                        [Main] Scheduler says: ✅ EXECUTE  |  carbon=110.0  threshold=200.0  margin=+90.0  zone=DE
+2026-04-24 14:19:08,881  INFO      executor.executor               ======================================================================
+2026-04-24 14:19:08,881  INFO      executor.executor               [Executor] Processing decision: ✅ EXECUTE  |  carbon=110.0  threshold=200.0  margin=+90.0  zone=DE
+2026-04-24 14:19:08,881  INFO      executor.executor               [Executor] 🟢 EXECUTING action 'data_processor'  (carbon=110.0 ≤ threshold=200.0)
+2026-04-24 14:19:08,919  INFO      executor.executor               [OW] Action 'data_processor' completed: success
+2026-04-24 14:19:08,920  INFO      executor.executor               [Executor] ✅ Event logged to CSV and JSON.
+2026-04-24 14:19:08,920  INFO      executor.executor               ======================================================================
+2026-04-24 14:19:08,920  INFO      __main__                        [Main] Execution outcome: status=executed  duration=0.34 ms
+2026-04-24 14:19:09,421  INFO      __main__                        
+─── Cycle 3 / 10 ─────────────────────────────────
+2026-04-24 14:19:09,421  INFO      __main__                        [Main] Simulated reading: 160.0 gCO2/kWh (zone=DE)
+2026-04-24 14:19:09,421  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=160.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-24 14:19:09,421  INFO      __main__                        [Main] Scheduler says: ✅ EXECUTE  |  carbon=160.0  threshold=200.0  margin=+40.0  zone=DE
+2026-04-24 14:19:09,421  INFO      executor.executor               ======================================================================
+2026-04-24 14:19:09,422  INFO      executor.executor               [Executor] Processing decision: ✅ EXECUTE  |  carbon=160.0  threshold=200.0  margin=+40.0  zone=DE
+2026-04-24 14:19:09,422  INFO      executor.executor               [Executor] 🟢 EXECUTING action 'data_processor'  (carbon=160.0 ≤ threshold=200.0)
+2026-04-24 14:19:09,472  INFO      executor.executor               [OW] Action 'data_processor' completed: success
+2026-04-24 14:19:09,472  INFO      executor.executor               [Executor] ✅ Event logged to CSV and JSON.
+2026-04-24 14:19:09,472  INFO      executor.executor               ======================================================================
+2026-04-24 14:19:09,472  INFO      __main__                        [Main] Execution outcome: status=executed  duration=0.45 ms
+2026-04-24 14:19:09,973  INFO      __main__                        
+─── Cycle 4 / 10 ─────────────────────────────────
+2026-04-24 14:19:09,973  INFO      __main__                        [Main] Simulated reading: 210.0 gCO2/kWh (zone=DE)
+2026-04-24 14:19:09,973  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=210.0  threshold=200.0  decision=DELAY    zone=DE
+2026-04-24 14:19:09,973  INFO      __main__                        [Main] Scheduler says: ⏸️  DELAY  |  carbon=210.0  threshold=200.0  margin=-10.0  zone=DE
+2026-04-24 14:19:09,973  INFO      executor.executor               ======================================================================
+2026-04-24 14:19:09,973  INFO      executor.executor               [Executor] Processing decision: ⏸️  DELAY  |  carbon=210.0  threshold=200.0  margin=-10.0  zone=DE
+2026-04-24 14:19:09,973  WARNING   executor.executor               [Executor] 🔴 DELAYING execution for 30s  (carbon=210.0 > threshold=200.0)
+2026-04-24 14:19:09,973  INFO      executor.executor               [Executor] ⏳ Task queued.  Sleeping 30s …
+2026-04-24 14:19:42,282  INFO      executor.executor               [Executor] ⏰ Delay period elapsed.
+2026-04-24 14:19:42,283  INFO      executor.executor               [Executor] ✅ Event logged to CSV and JSON.
+2026-04-24 14:19:42,283  INFO      executor.executor               ======================================================================
+2026-04-24 14:19:42,283  INFO      __main__                        [Main] Execution outcome: status=delayed  duration=None ms
+2026-04-24 14:19:42,783  INFO      __main__                        
+─── Cycle 5 / 10 ─────────────────────────────────
+2026-04-24 14:19:42,784  INFO      __main__                        [Main] Simulated reading: 275.0 gCO2/kWh (zone=DE)
+2026-04-24 14:19:42,784  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=275.0  threshold=200.0  decision=DELAY    zone=DE
+2026-04-24 14:19:42,784  INFO      __main__                        [Main] Scheduler says: ⏸️  DELAY  |  carbon=275.0  threshold=200.0  margin=-75.0  zone=DE
+2026-04-24 14:19:42,785  INFO      executor.executor               ======================================================================
+2026-04-24 14:19:42,785  INFO      executor.executor               [Executor] Processing decision: ⏸️  DELAY  |  carbon=275.0  threshold=200.0  margin=-75.0  zone=DE
+2026-04-24 14:19:42,785  WARNING   executor.executor               [Executor] 🔴 DELAYING execution for 30s  (carbon=275.0 > threshold=200.0)
+2026-04-24 14:19:42,785  INFO      executor.executor               [Executor] ⏳ Task queued.  Sleeping 30s …
+2026-04-24 14:20:12,786  INFO      executor.executor               [Executor] ⏰ Delay period elapsed.
+2026-04-24 14:20:12,787  INFO      executor.executor               [Executor] ✅ Event logged to CSV and JSON.
+2026-04-24 14:20:12,787  INFO      executor.executor               ======================================================================
+2026-04-24 14:20:12,787  INFO      __main__                        [Main] Execution outcome: status=delayed  duration=None ms
+2026-04-24 14:20:13,288  INFO      __main__                        
+─── Cycle 6 / 10 ─────────────────────────────────
+2026-04-24 14:20:13,288  INFO      __main__                        [Main] Simulated reading: 320.0 gCO2/kWh (zone=DE)
+2026-04-24 14:20:13,288  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=320.0  threshold=200.0  decision=DELAY    zone=DE
+2026-04-24 14:20:13,289  INFO      __main__                        [Main] Scheduler says: ⏸️  DELAY  |  carbon=320.0  threshold=200.0  margin=-120.0  zone=DE
+2026-04-24 14:20:13,289  INFO      executor.executor               ======================================================================
+2026-04-24 14:20:13,289  INFO      executor.executor               [Executor] Processing decision: ⏸️  DELAY  |  carbon=320.0  threshold=200.0  margin=-120.0  zone=DE
+2026-04-24 14:20:13,289  WARNING   executor.executor               [Executor] 🔴 DELAYING execution for 30s  (carbon=320.0 > threshold=200.0)
+2026-04-24 14:20:13,290  INFO      executor.executor               [Executor] ⏳ Task queued.  Sleeping 30s …
+2026-04-24 14:20:45,339  INFO      executor.executor               [Executor] ⏰ Delay period elapsed.
+2026-04-24 14:20:45,343  INFO      executor.executor               [Executor] ✅ Event logged to CSV and JSON.
+2026-04-24 14:20:45,343  INFO      executor.executor               ======================================================================
+2026-04-24 14:20:45,343  INFO      __main__                        [Main] Execution outcome: status=delayed  duration=None ms
+2026-04-24 14:20:45,843  INFO      __main__                        
+─── Cycle 7 / 10 ─────────────────────────────────
+2026-04-24 14:20:45,843  INFO      __main__                        [Main] Simulated reading: 180.0 gCO2/kWh (zone=DE)
+2026-04-24 14:20:45,843  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=180.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-24 14:20:45,843  INFO      __main__                        [Main] Scheduler says: ✅ EXECUTE  |  carbon=180.0  threshold=200.0  margin=+20.0  zone=DE
+2026-04-24 14:20:45,843  INFO      executor.executor               ======================================================================
+2026-04-24 14:20:45,843  INFO      executor.executor               [Executor] Processing decision: ✅ EXECUTE  |  carbon=180.0  threshold=200.0  margin=+20.0  zone=DE
+2026-04-24 14:20:45,843  INFO      executor.executor               [Executor] 🟢 EXECUTING action 'data_processor'  (carbon=180.0 ≤ threshold=200.0)
+2026-04-24 14:20:46,008  INFO      executor.executor               [OW] Action 'data_processor' completed: success
+2026-04-24 14:20:46,009  INFO      executor.executor               [Executor] ✅ Event logged to CSV and JSON.
+2026-04-24 14:20:46,009  INFO      executor.executor               ======================================================================
+2026-04-24 14:20:46,009  INFO      __main__                        [Main] Execution outcome: status=executed  duration=0.15 ms
+2026-04-24 14:20:46,509  INFO      __main__                        
+─── Cycle 8 / 10 ─────────────────────────────────
+2026-04-24 14:20:46,509  INFO      __main__                        [Main] Simulated reading: 95.0 gCO2/kWh (zone=DE)
+2026-04-24 14:20:46,509  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=95.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-24 14:20:46,510  INFO      __main__                        [Main] Scheduler says: ✅ EXECUTE  |  carbon=95.0  threshold=200.0  margin=+105.0  zone=DE
+2026-04-24 14:20:46,510  INFO      executor.executor               ======================================================================
+2026-04-24 14:20:46,510  INFO      executor.executor               [Executor] Processing decision: ✅ EXECUTE  |  carbon=95.0  threshold=200.0  margin=+105.0  zone=DE
+2026-04-24 14:20:46,510  INFO      executor.executor               [Executor] 🟢 EXECUTING action 'data_processor'  (carbon=95.0 ≤ threshold=200.0)
+2026-04-24 14:20:46,525  INFO      executor.executor               [OW] Action 'data_processor' completed: success
+2026-04-24 14:20:46,525  INFO      executor.executor               [Executor] ✅ Event logged to CSV and JSON.
+2026-04-24 14:20:46,525  INFO      executor.executor               ======================================================================
+2026-04-24 14:20:46,525  INFO      __main__                        [Main] Execution outcome: status=executed  duration=0.15 ms
+2026-04-24 14:20:47,026  INFO      __main__                        
+─── Cycle 9 / 10 ─────────────────────────────────
+2026-04-24 14:20:47,026  INFO      __main__                        [Main] Simulated reading: 240.0 gCO2/kWh (zone=DE)
+2026-04-24 14:20:47,026  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=240.0  threshold=200.0  decision=DELAY    zone=DE
+2026-04-24 14:20:47,026  INFO      __main__                        [Main] Scheduler says: ⏸️  DELAY  |  carbon=240.0  threshold=200.0  margin=-40.0  zone=DE
+2026-04-24 14:20:47,026  INFO      executor.executor               ======================================================================
+2026-04-24 14:20:47,027  INFO      executor.executor               [Executor] Processing decision: ⏸️  DELAY  |  carbon=240.0  threshold=200.0  margin=-40.0  zone=DE
+2026-04-24 14:20:47,027  WARNING   executor.executor               [Executor] 🔴 DELAYING execution for 30s  (carbon=240.0 > threshold=200.0)
+2026-04-24 14:20:47,027  INFO      executor.executor               [Executor] ⏳ Task queued.  Sleeping 30s …
+2026-04-24 14:21:12,752  INFO      __main__                        ╔══════════════════════════════════════════════════════════╗
+2026-04-24 14:21:12,752  INFO      __main__                        ║      Carbon-Aware Scheduling System  — STARTING         ║
+2026-04-24 14:21:12,752  INFO      __main__                        ╚══════════════════════════════════════════════════════════╝
+2026-04-24 14:21:12,752  INFO      __main__                          Mode      : SIMULATION
+2026-04-24 14:21:12,753  INFO      __main__                          Zone      : DE
+2026-04-24 14:21:12,753  INFO      __main__                          Threshold : 200.0 gCO2/kWh
+2026-04-24 14:21:12,753  INFO      __main__                          Cycles    : 10
+2026-04-24 14:21:12,753  INFO      __main__                          Delay     : 30s when carbon > threshold
+2026-04-24 14:21:12,753  INFO      scheduler.carbon_scheduler      [Scheduler] RuleBasedScheduler initialised  threshold=200.0 gCO2/kWh  delay=30s
+2026-04-24 14:21:12,753  INFO      __main__                          [Simulation] Using 10 pre-defined data points.
+2026-04-24 14:21:12,753  INFO      __main__                        
+─── Cycle 1 / 10 ─────────────────────────────────
+2026-04-24 14:21:12,753  INFO      __main__                        [Main] Simulated reading: 85.0 gCO2/kWh (zone=DE)
+2026-04-24 14:21:12,753  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=85.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-24 14:21:12,753  INFO      __main__                        [Main] Scheduler says: ✅ EXECUTE  |  carbon=85.0  threshold=200.0  margin=+115.0  zone=DE
+2026-04-24 14:21:12,753  INFO      executor.executor               ======================================================================
+2026-04-24 14:21:12,753  INFO      executor.executor               [Executor] Processing decision: ✅ EXECUTE  |  carbon=85.0  threshold=200.0  margin=+115.0  zone=DE
+2026-04-24 14:21:12,753  INFO      executor.executor               [Executor] 🟢 EXECUTING action 'data_processor'  (carbon=85.0 ≤ threshold=200.0)
+2026-04-24 14:21:12,800  INFO      executor.executor               [OW] Action 'data_processor' completed: success
+2026-04-24 14:21:12,800  INFO      executor.executor               [Executor] ✅ Event logged to CSV and JSON.
+2026-04-24 14:21:12,801  INFO      executor.executor               ======================================================================
+2026-04-24 14:21:12,801  INFO      __main__                        [Main] Execution outcome: status=executed  duration=0.24 ms
+2026-04-24 14:21:13,301  INFO      __main__                        
+─── Cycle 2 / 10 ─────────────────────────────────
+2026-04-24 14:21:13,301  INFO      __main__                        [Main] Simulated reading: 110.0 gCO2/kWh (zone=DE)
+2026-04-24 14:21:13,301  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=110.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-24 14:21:13,301  INFO      __main__                        [Main] Scheduler says: ✅ EXECUTE  |  carbon=110.0  threshold=200.0  margin=+90.0  zone=DE
+2026-04-24 14:21:13,301  INFO      executor.executor               ======================================================================
+2026-04-24 14:21:13,302  INFO      executor.executor               [Executor] Processing decision: ✅ EXECUTE  |  carbon=110.0  threshold=200.0  margin=+90.0  zone=DE
+2026-04-24 14:21:13,302  INFO      executor.executor               [Executor] 🟢 EXECUTING action 'data_processor'  (carbon=110.0 ≤ threshold=200.0)
+2026-04-24 14:21:13,339  INFO      executor.executor               [OW] Action 'data_processor' completed: success
+2026-04-24 14:21:13,340  INFO      executor.executor               [Executor] ✅ Event logged to CSV and JSON.
+2026-04-24 14:21:13,340  INFO      executor.executor               ======================================================================
+2026-04-24 14:21:13,340  INFO      __main__                        [Main] Execution outcome: status=executed  duration=0.28 ms
+2026-04-24 14:21:13,840  INFO      __main__                        
+─── Cycle 3 / 10 ─────────────────────────────────
+2026-04-24 14:21:13,840  INFO      __main__                        [Main] Simulated reading: 160.0 gCO2/kWh (zone=DE)
+2026-04-24 14:21:13,841  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=160.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-24 14:21:13,841  INFO      __main__                        [Main] Scheduler says: ✅ EXECUTE  |  carbon=160.0  threshold=200.0  margin=+40.0  zone=DE
+2026-04-24 14:21:13,841  INFO      executor.executor               ======================================================================
+2026-04-24 14:21:13,841  INFO      executor.executor               [Executor] Processing decision: ✅ EXECUTE  |  carbon=160.0  threshold=200.0  margin=+40.0  zone=DE
+2026-04-24 14:21:13,841  INFO      executor.executor               [Executor] 🟢 EXECUTING action 'data_processor'  (carbon=160.0 ≤ threshold=200.0)
+2026-04-24 14:21:13,861  INFO      executor.executor               [OW] Action 'data_processor' completed: success
+2026-04-24 14:21:13,861  INFO      executor.executor               [Executor] ✅ Event logged to CSV and JSON.
+2026-04-24 14:21:13,861  INFO      executor.executor               ======================================================================
+2026-04-24 14:21:13,861  INFO      __main__                        [Main] Execution outcome: status=executed  duration=0.17 ms
+2026-04-24 14:21:14,361  INFO      __main__                        
+─── Cycle 4 / 10 ─────────────────────────────────
+2026-04-24 14:21:14,362  INFO      __main__                        [Main] Simulated reading: 210.0 gCO2/kWh (zone=DE)
+2026-04-24 14:21:14,362  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=210.0  threshold=200.0  decision=DELAY    zone=DE
+2026-04-24 14:21:14,362  INFO      __main__                        [Main] Scheduler says: ⏸️  DELAY  |  carbon=210.0  threshold=200.0  margin=-10.0  zone=DE
+2026-04-24 14:21:14,362  INFO      executor.executor               ======================================================================
+2026-04-24 14:21:14,362  INFO      executor.executor               [Executor] Processing decision: ⏸️  DELAY  |  carbon=210.0  threshold=200.0  margin=-10.0  zone=DE
+2026-04-24 14:21:14,362  WARNING   executor.executor               [Executor] 🔴 DELAYING execution for 30s  (carbon=210.0 > threshold=200.0)
+2026-04-24 14:21:14,362  INFO      executor.executor               [Executor] ⏳ Task queued.  Sleeping 30s …
+2026-04-24 14:21:18,563  INFO      executor.executor               [Executor] ⏰ Delay period elapsed.
+2026-04-24 14:21:18,564  INFO      executor.executor               [Executor] ✅ Event logged to CSV and JSON.
+2026-04-24 14:21:18,564  INFO      executor.executor               ======================================================================
+2026-04-24 14:21:18,565  INFO      __main__                        [Main] Execution outcome: status=delayed  duration=None ms
+2026-04-24 14:21:19,065  INFO      __main__                        
+─── Cycle 10 / 10 ─────────────────────────────────
+2026-04-24 14:21:19,065  INFO      __main__                        [Main] Simulated reading: 130.0 gCO2/kWh (zone=DE)
+2026-04-24 14:21:19,066  INFO      scheduler.carbon_scheduler      [Scheduler] carbon=130.0  threshold=200.0  decision=EXECUTE  zone=DE
+2026-04-24 14:21:19,066  INFO      __main__                        [Main] Scheduler says: ✅ EXECUTE  |  carbon=130.0  threshold=200.0  margin=+70.0  zone=DE
+2026-04-24 14:21:19,066  INFO      executor.executor               ======================================================================
+2026-04-24 14:21:19,066  INFO      executor.executor               [Executor] Processing decision: ✅ EXECUTE  |  carbon=130.0  threshold=200.0  margin=+70.0  zone=DE
+2026-04-24 14:21:19,066  INFO      executor.executor               [Executor] 🟢 EXECUTING action 'data_processor'  (carbon=130.0 ≤ threshold=200.0)
+2026-04-24 14:21:19,097  INFO      executor.executor               [OW] Action 'data_processor' completed: success
+2026-04-24 14:21:19,097  INFO      executor.executor               [Executor] ✅ Event logged to CSV and JSON.
+2026-04-24 14:21:19,098  INFO      executor.executor               ======================================================================
+2026-04-24 14:21:19,098  INFO      __main__                        [Main] Execution outcome: status=executed  duration=0.17 ms
+2026-04-24 14:21:19,098  INFO      __main__                        
+╔══════════════════════════════════════════════════════════╗
+2026-04-24 14:21:19,098  INFO      __main__                        ║                  SUMMARY                                ║
+2026-04-24 14:21:19,098  INFO      __main__                        ╠══════════════════════════════════════════════════════════╣
+2026-04-24 14:21:19,098  INFO      __main__                        ║  Total cycles  : 10                                      ║
+2026-04-24 14:21:19,098  INFO      __main__                        ║  Executed      : 6                                       ║
+2026-04-24 14:21:19,098  INFO      __main__                        ║  Delayed       : 4                                       ║
+2026-04-24 14:21:19,098  INFO      __main__                        ║  Avg carbon    : 180.5                                gCO2 ║
+2026-04-24 14:21:19,098  INFO      __main__                        ╚══════════════════════════════════════════════════════════╝
+2026-04-24 14:21:19,098  INFO      __main__                          Logs saved to: logs/execution_log.csv  &  logs/execution_log.json

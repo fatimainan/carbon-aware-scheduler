@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+carbon_env/
+*.egg-info/
+.env
+
+# Logs (isteğe bağlı — ekip görsün diye bırakabilirsin)
+# logs/
+
+# Docker binary (büyük dosya)
+docker/docker-static
+
+# OS
+.DS_Store
+*.swp

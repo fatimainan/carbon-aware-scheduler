@@ -1,0 +1,8 @@
+# Core dependencies
+requests>=2.31.0       # HTTP client — API calls + OpenWhisk REST
+matplotlib>=3.8.0      # Visualization graphs
+numpy>=1.26.0          # Numerical analysis helpers
+
+# Development / testing
+pytest>=8.0.0
+pytest-mock>=3.12.0
