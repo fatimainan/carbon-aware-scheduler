@@ -6,8 +6,13 @@ carbon_env/
 *.egg-info/
 .env
 
+*:Zone.Identifier
 # Logs (isteğe bağlı — ekip görsün diye bırakabilirsin)
 # logs/
+logs/
+*.log
+*.csv
+*.json
 
 # Docker binary (büyük dosya)
 docker/docker-static
