@@ -25,3 +25,6 @@ docker/*.tgz
 docker/*.tar
 docker/*.gz
 docker/docker/
+*:Zone.Identifier
+*.Zone.Identifier
+*.Zone.Identifier
