@@ -16,3 +16,7 @@ docker/docker-static
 .DS_Store
 *.swp
 docker/docker-static
+docker/
+*.tgz
+*.tar
+*.gz
