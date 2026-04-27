@@ -1,61 +1,23 @@
 services:
-
-  couchdb:
-    image: couchdb:3.3
-    container_name: ow-couchdb
-    network_mode: "host"
-    environment:
-      COUCHDB_USER: whisk_admin
-      COUCHDB_PASSWORD: some_passw0rd
-    volumes:
-      - couchdb_data:/opt/couchdb/data
-
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.5.0
-    container_name: ow-zookeeper
-    network_mode: "host"
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-
-  kafka:
-    image: confluentinc/cp-kafka:7.5.0
-    container_name: ow-kafka
-    network_mode: "host"
-    depends_on:
-      - zookeeper
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: localhost:2181
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-
   openwhisk:
     image: openwhisk/standalone:nightly
     container_name: ow-standalone
-    network_mode: "host"
     user: "0:0"
+    network_mode: "bridge"
+    ports:
+      - "3233:3233"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./docker-static:/usr/bin/docker:ro
-      - /usr/sbin/ip:/usr/sbin/ip:ro
       - whisk_data:/root/.openwhisk/standalone/server-3233
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
-      - DOCKER_API_VERSION=1.40
-      - CONFIG_whisk_api_host_name=localhost
+      - DOCKER_API_VERSION=1.44
+      # OW is now on 172.17.x.x, action containers also 172.17.x.x
+      # So OW can reach action containers on 172.17.x.x:8080
+      # api_host = 172.17.0.1 (bridge gateway, accessible from bridge containers)
+      - CONFIG_whisk_api_host_name=172.17.0.1
       - CONFIG_whisk_api_host_port=3233
       - CONFIG_whisk_api_host_proto=http
-      - CONFIG_whisk_info_date=2024-01-01
-      - CONFIG_whisk_info_buildNo=development-unknown
-      - OPENWHISK_CORE_DB_HOST=localhost
-      - OPENWHISK_CORE_DB_USERNAME=whisk_admin
-      - OPENWHISK_CORE_DB_PASSWORD=some_passw0rd
-    depends_on:
-      - couchdb
-      - kafka
 
 volumes:
-  couchdb_data:
   whisk_data:
