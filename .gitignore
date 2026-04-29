@@ -47,3 +47,7 @@ __pycache__/
 .vscode/
 .idea/
 .env
+
+carbon-dashboard/node_modules/
+carbon-dashboard/dist/
+carbon-dashboard/.env.local
