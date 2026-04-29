@@ -1,0 +1,98 @@
+services:
+
+  couchdb:
+    image: couchdb:3.3
+    container_name: ow-couchdb
+    ports:
+      - "5984:5984"
+    environment:
+      COUCHDB_USER: whisk_admin
+      COUCHDB_PASSWORD: some_passw0rd
+    volumes:
+      - couchdb_data:/opt/couchdb/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5984/_up"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: ow-zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: ow-kafka
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  couchdb-init:
+    image: curlimages/curl:latest
+    container_name: ow-couchdb-init
+    depends_on:
+      couchdb:
+        condition: service_healthy
+    restart: "no"
+    entrypoint: ["/bin/sh", "-c", "
+      curl -s -X PUT http://whisk_admin:some_passw0rd@couchdb:5984/_users &&
+      curl -s -X PUT http://whisk_admin:some_passw0rd@couchdb:5984/_replicator &&
+      curl -s -X PUT http://whisk_admin:some_passw0rd@couchdb:5984/_global_changes &&
+      echo 'CouchDB initialized'
+    "]
+
+  openwhisk:
+    image: openwhisk/standalone:nightly
+    container_name: ow-standalone
+    user: "0:0"
+    network_mode: "bridge"
+    ports:
+      - "3233:3233"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - whisk_data:/root/.openwhisk/standalone/server-3233
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - DOCKER_API_VERSION=1.44
+      # OW is now on 172.17.x.x, action containers also 172.17.x.x
+      # So OW can reach action containers on 172.17.x.x:8080
+      # api_host = 172.17.0.1 (bridge gateway, accessible from bridge containers)
+      - CONFIG_whisk_api_host_name=172.17.0.1
+      - CONFIG_whisk_api_host_port=3233
+      - CONFIG_whisk_api_host_proto=http
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  scheduler:
+    build: .
+    container_name: carbon-scheduler
+    depends_on:
+      - redis
+      - openwhisk
+    volumes:
+      - .:/app
+    environment:
+      - REDIS_HOST=redis
+      - PYTHONUNBUFFERED=1
+      - OPENWHISK_HOST=http://172.17.0.2:3233
+    command: python worker.py    
+
+volumes:
+  couchdb_data:
+  whisk_data:

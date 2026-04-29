@@ -28,3 +28,22 @@ docker/docker/
 *:Zone.Identifier
 *.Zone.Identifier
 *.Zone.Identifier
+
+# Sanal ortamlar
+port-duzeltme/
+port-duzeltme_env/
+
+# Loglar ve geçici veriler
+logs/*.log
+logs/*.csv
+logs/*.json
+visualization/output/*.png
+
+# Python önbelleği
+__pycache__/
+*.pyc
+
+# IDE/Editor dosyaları
+.vscode/
+.idea/
+.env

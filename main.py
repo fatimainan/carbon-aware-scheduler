@@ -137,7 +137,7 @@ def run(
     executor  = Executor(
         action_name="data_processor",
         action_params={"task_name": "carbon-aware-batch", "payload_size": 256},
-        execute_after_delay=False,  # set True to actually run after delay
+        execute_after_delay=True,  # set True to actually run after delay
     )
 
     if sim_mode:
