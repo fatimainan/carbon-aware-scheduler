@@ -143,6 +143,12 @@ class Executor:
                 "error":                 None,
             }
 
+    def update_carbon_state(self, intensity: float, threshold: float):
+        if self._redis:
+            state = {"intensity": intensity, "threshold": threshold, "updated_at": time.time()}
+            self._redis.set("current_carbon_state", json.dumps(state))
+            logger.info("[Executor] 📡 Carbon state updated in Redis: %.1f gCO2", intensity)
+
     # ── Logging ───────────────────────────────────────────────────────────────
 
     def _init_csv(self) -> None:

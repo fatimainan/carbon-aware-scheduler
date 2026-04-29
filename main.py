@@ -162,6 +162,7 @@ def run(
                 )
             else:
                 reading = api_client.get_carbon_intensity(zone)
+            executor.update_carbon_state(reading.carbon_intensity, threshold)
         except RuntimeError as exc:
             logger.error("[Main] Failed to fetch carbon intensity: %s", exc)
             logger.error("[Main] Skipping cycle %d.", cycle)
