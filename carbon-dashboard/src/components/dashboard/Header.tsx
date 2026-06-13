@@ -10,6 +10,7 @@ interface HeaderProps {
   isLive: boolean;
   isFetching: boolean;
   dataUpdatedAt: number;
+  currentCarbon: number | null;
 }
 
 function formatRelative(dataUpdatedAt: number): string {
@@ -31,6 +32,7 @@ export function Header({
   isLive,
   isFetching,
   dataUpdatedAt,
+  currentCarbon,
 }: HeaderProps) {
   const dotColor = isLive ? "bg-primary" : "bg-destructive";
   const badgeText = isLive ? (isFetching ? "SYNCING" : "LIVE") : "OFFLINE";
@@ -67,20 +69,31 @@ export function Header({
         </p>
       </div>
 
-      <div className="flex flex-wrap items-center gap-4 text-sm bg-card/50 p-3 rounded-lg border border-border/50">
-        <div className="flex items-center gap-2 px-2">
-          <Server className="w-4 h-4 text-muted-foreground" />
-          <span className="font-mono text-foreground">{actionName}</span>
-        </div>
-        <div className="w-px h-4 bg-border/50"></div>
-        <div className="flex items-center gap-2 px-2">
-          <MapPin className="w-4 h-4 text-muted-foreground" />
-          <span className="font-mono text-foreground">{zone}</span>
-        </div>
-        <div className="w-px h-4 bg-border/50"></div>
-        <div className="flex items-center gap-2 px-2">
-          <Zap className="w-4 h-4 text-amber-500" />
-          <span className="font-mono text-foreground">Thresh: {threshold}g</span>
+      <div className="flex flex-wrap items-center gap-4">
+        {currentCarbon !== null && (
+          <div className="flex flex-col items-start md:items-end justify-center px-4 py-2 bg-emerald-500/10 text-emerald-400 rounded-lg border border-emerald-500/20 shadow-md">
+            <span className="text-[10px] text-emerald-400/80 uppercase font-mono tracking-widest font-bold">CURRENT CARBON</span>
+            <span className="text-2xl md:text-3xl font-extrabold font-mono leading-none mt-1">
+              {currentCarbon} <span className="text-xs font-normal text-muted-foreground font-sans">gCO₂/kWh</span>
+            </span>
+          </div>
+        )}
+
+        <div className="flex flex-wrap items-center gap-4 text-sm bg-card/50 p-3 rounded-lg border border-border/50">
+          <div className="flex items-center gap-2 px-2">
+            <Server className="w-4 h-4 text-muted-foreground" />
+            <span className="font-mono text-foreground">{actionName}</span>
+          </div>
+          <div className="w-px h-4 bg-border/50"></div>
+          <div className="flex items-center gap-2 px-2">
+            <MapPin className="w-4 h-4 text-muted-foreground" />
+            <span className="font-mono text-foreground">{zone}</span>
+          </div>
+          <div className="w-px h-4 bg-border/50"></div>
+          <div className="flex items-center gap-2 px-2">
+            <Zap className="w-4 h-4 text-amber-500" />
+            <span className="font-mono text-foreground">Thresh: {threshold}g</span>
+          </div>
         </div>
       </div>
     </motion.header>

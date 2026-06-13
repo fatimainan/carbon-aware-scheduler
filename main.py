@@ -52,6 +52,8 @@ from config import (
     DELAY_SECONDS,
     SIMULATION_MODE,
     SIMULATION_DATA,
+    LOG_FILE_CSV,
+    LOG_FILE_JSON,
 )
 
 from api.electricity_maps import ElectricityMapsClient, CarbonReading
@@ -128,6 +130,24 @@ def run(
     os.makedirs("logs", exist_ok=True)
     setup_logging()
 
+    # Reset log files for the current mode so each run starts fresh
+    if os.path.exists(LOG_FILE_CSV):
+        try:
+            os.remove(LOG_FILE_CSV)
+        except Exception:
+            pass
+    if os.path.exists(LOG_FILE_JSON):
+        try:
+            os.remove(LOG_FILE_JSON)
+        except Exception:
+            pass
+    if os.path.exists("logs/worker.log"):
+        try:
+            with open("logs/worker.log", "w", encoding="utf-8") as f:
+                pass
+        except Exception:
+            pass
+
     logger.info("╔══════════════════════════════════════════════════════════╗")
     logger.info("║      Carbon-Aware Scheduling System  — STARTING         ║")
     logger.info("╚══════════════════════════════════════════════════════════╝")
@@ -147,6 +167,7 @@ def run(
         action_params={"task_name": "carbon-aware-batch", "payload_size": 256},
         execute_after_delay=True,  # set True to actually run after delay
     )
+    executor.clear_queue()
 
     if sim_mode:
         source = SimulatedCarbonSource(zone=zone)
@@ -159,6 +180,12 @@ def run(
     results = []
     for cycle in range(1, cycles + 1):
         logger.info("\n─── Cycle %d / %d ─────────────────────────────────", cycle, cycles)
+        
+        # Set dynamic task name for the current cycle
+        executor._action_params = {
+            "task_name": f"Request #{cycle}",
+            "payload_size": 256
+        }
 
         # 1. FETCH carbon data
         try:

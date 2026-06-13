@@ -63,6 +63,7 @@ class CycleResult(BaseModel):
     executionStatus: Literal["executed", "delayed", "queued"]
     executionDurationMs: float | None
     scenario: Literal["A", "B"]
+    taskName: str | None = None
 
 
 class RunConfig(BaseModel):
@@ -75,6 +76,7 @@ class RunConfig(BaseModel):
 class DashboardPayload(BaseModel):
     config: RunConfig
     cycles: list[CycleResult]
+    workerLogs: list[str] = []
     generatedAt: str
 
 
@@ -161,6 +163,7 @@ def _to_cycles(records: list[dict]) -> list[CycleResult]:
                 else ("executed" if decision == "execute" else "delayed"),
                 executionDurationMs=duration,
                 scenario="A" if carbon <= threshold else "B",
+                taskName=rec.get("task_name"),
             )
         )
     return cycles
@@ -206,8 +209,21 @@ def get_dashboard(
     cycles = _to_cycles(records)
     config = _config_from_records(records)
 
+    # Read worker logs
+    worker_log_path = Path("logs/worker.log")
+    worker_logs = []
+    if worker_log_path.exists():
+        try:
+            with worker_log_path.open("r", encoding="utf-8") as f:
+                # Read last 35 lines
+                lines = f.readlines()
+                worker_logs = [line.strip() for line in lines[-35:]]
+        except Exception:
+            pass
+
     return DashboardPayload(
         config=config,
         cycles=cycles,
+        workerLogs=worker_logs,
         generatedAt=datetime.now(timezone.utc).isoformat(),
     )

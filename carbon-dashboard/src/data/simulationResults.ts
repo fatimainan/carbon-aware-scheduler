@@ -6,6 +6,7 @@ export interface CycleResult {
   executionStatus: "executed" | "delayed" | "queued";
   executionDurationMs: number | null;
   scenario: "A" | "B";
+  taskName?: string;
 }
 
 export interface RunConfig {
@@ -18,6 +19,7 @@ export interface RunConfig {
 export interface DashboardPayload {
   config: RunConfig;
   cycles: CycleResult[];
+  workerLogs: string[];
   generatedAt: string;
 }
 

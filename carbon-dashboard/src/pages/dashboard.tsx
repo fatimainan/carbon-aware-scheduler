@@ -5,6 +5,7 @@ import { SecondaryCharts } from "@/components/dashboard/SecondaryCharts";
 import { CycleTable } from "@/components/dashboard/CycleTable";
 import { Footer } from "@/components/dashboard/Footer";
 import { DashboardStateBanner } from "@/components/dashboard/DashboardStateBanner";
+import { WorkerConsole } from "@/components/dashboard/WorkerConsole";
 import {
   deriveMetrics,
   EMPTY_METRICS,
@@ -31,6 +32,7 @@ export default function Dashboard() {
           isLive={!isError}
           isFetching={isFetching}
           dataUpdatedAt={dataUpdatedAt}
+          currentCarbon={cycles.length > 0 ? cycles[cycles.length - 1].carbonIntensity : null}
         />
 
         <DashboardStateBanner
@@ -55,6 +57,8 @@ export default function Dashboard() {
         </div>
 
         <CycleTable cycles={cycles} />
+
+        <WorkerConsole logs={data?.workerLogs ?? []} />
 
         <Footer
           actionName={config.actionName}

@@ -75,6 +75,15 @@ class Executor:
 
     # ── Public API ────────────────────────────────────────────────────────────
 
+    def clear_queue(self) -> None:
+        if self._redis:
+            try:
+                self._redis.delete("carbon_task_queue")
+                self._redis.set("clear_worker_logs", "true")
+                logger.info("[Executor] Cleared existing tasks and requested worker log reset.")
+            except Exception as e:
+                logger.warning("[Executor] Failed to clear Redis queue: %s", e)
+
     def run(self, decision: ScheduleDecision) -> dict:
         logger.info("=" * 70)
         logger.info("[Executor] Processing decision: %s", decision)
@@ -122,6 +131,7 @@ class Executor:
                 "retry_after":    time.time() + (decision.delay_seconds or 30),
                 "carbon_at_delay": decision.carbon_intensity,
                 "threshold":      decision.threshold,
+                "zone":           decision.zone,
             }
             self._redis.rpush("carbon_task_queue", json.dumps(task))
             logger.info("[Executor] ⏳ Task pushed to Redis queue.")

@@ -1,5 +1,5 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { ResponsiveContainer, ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine, Scatter } from "recharts";
+import { ResponsiveContainer, ComposedChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine, Scatter, LabelList } from "recharts";
 import { CycleResult } from "@/data/simulationResults";
 
 interface PrimaryChartProps {
@@ -8,15 +8,23 @@ interface PrimaryChartProps {
 }
 
 export function PrimaryChart({ cycles, threshold }: PrimaryChartProps) {
+  const formatLabel = (c: CycleResult) => {
+    if (c.taskName) {
+      return c.taskName.replace("Request #", "Req #");
+    }
+    return `Req #${c.cycle}`;
+  };
+
   const chartData = cycles.map(c => ({
     time: c.timestampOffsetMin,
     carbon: c.carbonIntensity,
     decision: c.decision,
+    label: formatLabel(c),
     isDelayed: c.decision === "delay" ? c.carbonIntensity : null,
     isExecuted: c.decision === "execute" ? c.carbonIntensity : null
   }));
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
@@ -96,8 +104,12 @@ export function PrimaryChart({ cycles, threshold }: PrimaryChartProps) {
               className="opacity-40"
             />
 
-            <Scatter dataKey="isExecuted" fill="var(--color-primary)" className="opacity-80" />
-            <Scatter dataKey="isDelayed" fill="var(--color-chart-3)" className="opacity-80" />
+            <Scatter dataKey="isExecuted" fill="var(--color-primary)" className="opacity-80">
+              <LabelList dataKey="label" position="top" style={{ fill: '#10b981', fontSize: 10, fontFamily: 'monospace', fontWeight: 'bold' }} />
+            </Scatter>
+            <Scatter dataKey="isDelayed" fill="var(--color-chart-3)" className="opacity-80">
+              <LabelList dataKey="label" position="top" style={{ fill: '#f59e0b', fontSize: 10, fontFamily: 'monospace', fontWeight: 'bold' }} />
+            </Scatter>
             
           </ComposedChart>
         </ResponsiveContainer>
