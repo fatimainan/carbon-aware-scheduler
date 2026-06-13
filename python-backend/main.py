@@ -1,26 +1,22 @@
 """
 python-backend/main.py
 ────────────────────────────────────────────────────────────────────────────────
-FastAPI service that exposes the Carbon-Aware Scheduler's execution log
+FastAPI service that exposes the Carbon-Aware Scheduler's execution logs
 to the React dashboard.
 
-Drop this file into your `carbon_aware_scheduler` project (or any path that
-can `import` your existing code). It does NOT replace your scheduler — it
-runs alongside `main.py` / `worker.py` and reads the same log files they
-write to (`logs/execution_log.json` by default).
-
-Endpoints
-─────────
-    GET  /api/dashboard   → { config, cycles, generatedAt }
-    GET  /api/healthz     → { status: "ok" }
+CHANGES vs. original:
+  - Added `?mode=sim|sandbox|live` query param to /api/dashboard
+  - Each mode reads from a different JSON log file:
+        sim     -> logs/execution_log_sim.json
+        sandbox -> logs/execution_log_sandbox.json
+        live    -> logs/execution_log_live.json
+  - Falls back to LOG_FILE_JSON (old single-file behavior) if the
+    mode-specific file doesn't exist, so nothing breaks if you haven't
+    split your logs yet.
 
 Run
 ───
-    pip install fastapi "uvicorn[standard]"
     uvicorn python-backend.main:app --reload --host 0.0.0.0 --port 8000
-
-Then in the dashboard:
-    VITE_API_BASE_URL=http://localhost:8000
 """
 
 from __future__ import annotations
@@ -31,27 +27,32 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Literal
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-# ── Config (mirror your scheduler's config.py) ────────────────────────────────
+# ── Config ──────────────────────────────────────────────────────────────────
 LOG_FILE_JSON = os.getenv("LOG_FILE_JSON", "logs/execution_log.json")
-THRESHOLD = float(os.getenv("CARBON_THRESHOLD", "200"))
+LOGS_DIR = Path(LOG_FILE_JSON).parent
+
+MODE_FILES = {
+    "sim":     LOGS_DIR / "execution_log_sim.json",
+    "sandbox": LOGS_DIR / "execution_log_sandbox.json",
+    "live":    LOGS_DIR / "execution_log_live.json",
+}
+
+THRESHOLD = float(os.getenv("CARBON_THRESHOLD", "350"))
 DELAY_SECONDS = int(os.getenv("DELAY_SECONDS", "30"))
 ZONE = os.getenv("CARBON_ZONE", "DE")
 ACTION_NAME = os.getenv("ACTION_NAME", "data_processor")
 
-# Comma-separated list of allowed origins for CORS.
-# Set this to your dashboard URL in production, e.g.
-#   ALLOWED_ORIGINS="https://carbon-dashboard.replit.app"
 ALLOWED_ORIGINS = [
     o.strip()
     for o in os.getenv("ALLOWED_ORIGINS", "*").split(",")
     if o.strip()
 ]
 
-# ── Models (must match the React `DashboardPayload` type) ─────────────────────
+# ── Models ──────────────────────────────────────────────────────────────────
 
 
 class CycleResult(BaseModel):
@@ -79,7 +80,7 @@ class DashboardPayload(BaseModel):
 
 # ── App ───────────────────────────────────────────────────────────────────────
 
-app = FastAPI(title="Carbon-Aware Scheduler API", version="1.0.0")
+app = FastAPI(title="Carbon-Aware Scheduler API", version="1.1.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -93,9 +94,19 @@ app.add_middleware(
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 
-def _read_log_records() -> list[dict]:
+def _resolve_log_path(mode: str) -> Path:
+    """Pick the JSON log file for the given mode, with fallback."""
+    mode_path = MODE_FILES.get(mode)
+    if mode_path and mode_path.exists():
+        return mode_path
+
+    # Fallback: old single-file behavior (useful during migration)
+    fallback = Path(LOG_FILE_JSON)
+    return fallback
+
+
+def _read_log_records(path: Path) -> list[dict]:
     """Read the newline-delimited JSON log written by executor.Executor."""
-    path = Path(LOG_FILE_JSON)
     if not path.exists():
         return []
 
@@ -117,8 +128,6 @@ def _to_cycles(records: list[dict]) -> list[CycleResult]:
     if not records:
         return []
 
-    # Anchor the time-offset axis to the first record's timestamp so the
-    # x-axis always starts at T+0 minutes.
     anchor = _parse_ts(records[0]["timestamp"])
 
     cycles: list[CycleResult] = []
@@ -158,10 +167,26 @@ def _to_cycles(records: list[dict]) -> list[CycleResult]:
 
 
 def _parse_ts(raw: str) -> datetime:
-    # Handles both `2026-04-19T19:10:09.972980+00:00` and `...Z` forms.
     if raw.endswith("Z"):
         raw = raw[:-1] + "+00:00"
     return datetime.fromisoformat(raw)
+
+
+def _config_from_records(records: list[dict]) -> RunConfig:
+    """Use the most recent record's threshold/zone/action if available,
+    otherwise fall back to env defaults."""
+    threshold, zone, action = THRESHOLD, ZONE, ACTION_NAME
+    if records:
+        last = records[-1]
+        threshold = float(last.get("threshold", threshold))
+        zone = last.get("zone", zone)
+        action = last.get("action_name", action)
+    return RunConfig(
+        threshold=threshold,
+        delaySeconds=DELAY_SECONDS,
+        zone=zone,
+        actionName=action,
+    )
 
 
 # ── Routes ────────────────────────────────────────────────────────────────────
@@ -173,16 +198,16 @@ def healthz() -> dict:
 
 
 @app.get("/api/dashboard", response_model=DashboardPayload)
-def get_dashboard() -> DashboardPayload:
-    records = _read_log_records()
+def get_dashboard(
+    mode: Literal["sim", "sandbox", "live"] = Query(default="sandbox"),
+) -> DashboardPayload:
+    log_path = _resolve_log_path(mode)
+    records = _read_log_records(log_path)
     cycles = _to_cycles(records)
+    config = _config_from_records(records)
+
     return DashboardPayload(
-        config=RunConfig(
-            threshold=THRESHOLD,
-            delaySeconds=DELAY_SECONDS,
-            zone=ZONE,
-            actionName=ACTION_NAME,
-        ),
+        config=config,
         cycles=cycles,
         generatedAt=datetime.now(timezone.utc).isoformat(),
     )

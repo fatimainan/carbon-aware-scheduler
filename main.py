@@ -27,16 +27,23 @@ Usage
     # Specific zone:
     python main.py --zone US-CAL-CISO
 """
-
 from __future__ import annotations
 import sys
 sys.stdout.reconfigure(encoding='utf-8')
 import argparse
 import logging
 import os
-import sys
 import time
 from datetime import datetime, timezone
+
+# ── Pre-parse --mode so config.py picks the right log files ──────────────────
+_VALID_MODES = ("sim", "sandbox", "live")
+_mode = "sandbox"
+if "--mode" in sys.argv:
+    idx = sys.argv.index("--mode")
+    if idx + 1 < len(sys.argv) and sys.argv[idx + 1] in _VALID_MODES:
+        _mode = sys.argv[idx + 1]
+os.environ["LOG_MODE"] = _mode
 
 # ── Project imports ────────────────────────────────────────────────────────────
 from config import (
@@ -46,6 +53,7 @@ from config import (
     SIMULATION_MODE,
     SIMULATION_DATA,
 )
+
 from api.electricity_maps import ElectricityMapsClient, CarbonReading
 from scheduler.carbon_scheduler import RuleBasedScheduler, ScheduleDecision
 from executor.executor import Executor
@@ -207,7 +215,7 @@ def run(
         avg_carbon = sum(r["carbon_intensity"] for r in results) / len(results)
         logger.info("║  Avg carbon    : %-36.1f gCO2 ║", avg_carbon)
     logger.info("╚══════════════════════════════════════════════════════════╝")
-    logger.info("  Logs saved to: logs/execution_log.csv  &  logs/execution_log.json")
+    logger.info("  Logs saved to: %s  &  %s", LOG_FILE_CSV, LOG_FILE_JSON)
 
 
 # ── CLI interface ─────────────────────────────────────────────────────────────
@@ -216,6 +224,9 @@ def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(
         description="Carbon-Aware Scheduling System for Apache OpenWhisk"
     )
+    p.add_argument("--mode", type=str, default="sandbox",
+               choices=["sim", "sandbox", "live"],
+               help="Log dosyası modu (hangi CSV/JSON'a yazılacağı)")
     p.add_argument("--cycles",    type=int,   default=len(SIMULATION_DATA),
                    help="Number of scheduling cycles to run")
     p.add_argument("--zone",      type=str,   default=DEFAULT_ZONE,
