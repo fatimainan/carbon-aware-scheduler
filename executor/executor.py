@@ -60,14 +60,37 @@ class Executor:
         self._ow_invoker    = OpenWhiskInvoker()
 
         # Redis bağlantısı
-        redis_host = os.getenv("REDIS_HOST", "redis")
+        is_docker = os.path.exists("/.dockerenv")
+        default_redis_host = "redis" if is_docker else "localhost"
+        redis_host = os.getenv("REDIS_HOST", default_redis_host)
         try:
-            self._redis = redis.Redis(host=redis_host, port=6379, decode_responses=True)
+            self._redis = redis.Redis(
+                host=redis_host,
+                port=6379,
+                decode_responses=True,
+                socket_connect_timeout=1.5,
+                socket_timeout=1.5,
+            )
             self._redis.ping()
             logger.info("[Executor] Redis connected at %s:6379", redis_host)
         except Exception:
-            self._redis = None
-            logger.warning("[Executor] Redis not available — delay will use sleep fallback")
+            if redis_host != "localhost":
+                try:
+                    self._redis = redis.Redis(
+                        host="localhost",
+                        port=6379,
+                        decode_responses=True,
+                        socket_connect_timeout=1.5,
+                        socket_timeout=1.5,
+                    )
+                    self._redis.ping()
+                    logger.info("[Executor] Redis connected at localhost:6379 (fallback)")
+                except Exception:
+                    self._redis = None
+                    logger.warning("[Executor] Redis not available — delay will use sleep fallback")
+            else:
+                self._redis = None
+                logger.warning("[Executor] Redis not available — delay will use sleep fallback")
 
         Path(LOG_FILE_CSV).parent.mkdir(parents=True, exist_ok=True)
         Path(LOG_FILE_JSON).parent.mkdir(parents=True, exist_ok=True)

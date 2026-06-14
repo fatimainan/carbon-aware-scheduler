@@ -39,14 +39,22 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # ── Yapılandırma ─────────────────────────────────────────────────────────────
-REDIS_HOST = os.getenv("REDIS_HOST", "redis")
+IS_DOCKER = os.path.exists("/.dockerenv")
+DEFAULT_REDIS_HOST = "redis" if IS_DOCKER else "localhost"
+REDIS_HOST = os.getenv("REDIS_HOST", DEFAULT_REDIS_HOST)
 QUEUE_NAME = "carbon_task_queue"
 
 def get_redis_connection() -> redis.Redis:
     """Redis'e bağlanır, başarısız olursa 5 saniyede bir yeniden dener."""
     while True:
         try:
-            r = redis.Redis(host=REDIS_HOST, port=6379, decode_responses=True)
+            r = redis.Redis(
+                host=REDIS_HOST,
+                port=6379,
+                decode_responses=True,
+                socket_connect_timeout=1.5,
+                socket_timeout=1.5,
+            )
             r.ping()
             logger.info("[Worker] Redis connected at %s:6379", REDIS_HOST)
             return r
@@ -129,8 +137,8 @@ def run_worker() -> None:
         try:
             check_and_clear_logs(r)
 
-            # 1. Kuyruktan iş al (Zaman aşımı 10sn)
-            raw = r.blpop(QUEUE_NAME, timeout=10)
+            # 1. Kuyruktan iş al (Zaman aşımı 1sn)
+            raw = r.blpop(QUEUE_NAME, timeout=1)
 
             check_and_clear_logs(r)
 

@@ -54,12 +54,34 @@ ALLOWED_ORIGINS = [
 ]
 
 # Redis client initialization
-REDIS_HOST = os.getenv("REDIS_HOST", "redis")
+IS_DOCKER = os.path.exists("/.dockerenv")
+DEFAULT_REDIS_HOST = "redis" if IS_DOCKER else "localhost"
+REDIS_HOST = os.getenv("REDIS_HOST", DEFAULT_REDIS_HOST)
+
 try:
-    redis_client = redis.Redis(host=REDIS_HOST, port=6379, decode_responses=True)
+    redis_client = redis.Redis(
+        host=REDIS_HOST,
+        port=6379,
+        decode_responses=True,
+        socket_connect_timeout=1.5,
+        socket_timeout=1.5,
+    )
     redis_client.ping()
 except Exception:
-    redis_client = None
+    if REDIS_HOST != "localhost":
+        try:
+            redis_client = redis.Redis(
+                host="localhost",
+                port=6379,
+                decode_responses=True,
+                socket_connect_timeout=1.5,
+                socket_timeout=1.5,
+            )
+            redis_client.ping()
+        except Exception:
+            redis_client = None
+    else:
+        redis_client = None
 
 
 def get_dynamic_threshold() -> float:
@@ -124,7 +146,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
     allow_credentials=False,
-    allow_methods=["GET"],
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
