@@ -23,12 +23,12 @@
 * **Sandbox Modu (`sandbox`):**
   *(Gerçek zamanlı İsviçre şebeke verisini çeker. Geliştirme ortamıdır, her çalıştırmada logları temizler).*
   ```bash
-  python3 main.py --mode sandbox --zone CH --cycles 5 --interval 1 --threshold 150
+  python3 main.py --mode sandbox --zone CH --cycles 5 --interval 1
   ```
 * **Canlı Mod (`live`):**
   *(Gerçek zamanlı İsviçre şebeke verisini çeker. Raporlama için geçmiş logları asla silmez).*
   ```bash
-  python3 main.py --mode live --zone CH --cycles 5 --interval 1 --threshold 150
+  python3 main.py --mode live --zone CH --cycles 5 --interval 1
   ```
 
 ---
@@ -41,9 +41,9 @@
   ```
 * **Sandbox Modu (`sandbox`):**
   ```bash
-  python3 main.py --mode sandbox --zone DE --cycles 5 --interval 1 --threshold 150
+  python3 main.py --mode sandbox --zone DE --cycles 5 --interval 1
   ```
 * **Canlı Mod (`live`):**
   ```bash
-  python3 main.py --mode live --zone DE --cycles 5 --interval 1 --threshold 150
+  python3 main.py --mode live --zone DE --cycles 5 --interval 1
   ```
