@@ -34,6 +34,7 @@ import argparse
 import logging
 import os
 import time
+import json
 from datetime import datetime, timezone
 
 # ── Pre-parse --mode so config.py picks the right log files ──────────────────
@@ -78,18 +79,18 @@ logger = logging.getLogger(__name__)
 
 from pathlib import Path
 
-def get_dynamic_threshold(redis_conn, default_val: float) -> float:
+def get_dynamic_threshold(redis_conn, default_val: float, mode: str = "sandbox") -> float:
     # 1. Try Redis first
     if redis_conn:
         try:
-            val = redis_conn.get("carbon_threshold")
+            val = redis_conn.get(f"carbon_threshold_{mode}")
             if val is not None:
                 return float(val)
         except Exception:
             pass
 
     # 2. Try shared JSON file
-    config_file = Path("logs/dynamic_config.json")
+    config_file = Path(f"logs/dynamic_config_{mode}.json")
     if config_file.exists():
         try:
             with config_file.open("r", encoding="utf-8") as f:
@@ -156,23 +157,24 @@ def run(
     os.makedirs("logs", exist_ok=True)
     setup_logging()
 
-    # Reset log files for the current mode so each run starts fresh
-    if os.path.exists(LOG_FILE_CSV):
-        try:
-            os.remove(LOG_FILE_CSV)
-        except Exception:
-            pass
-    if os.path.exists(LOG_FILE_JSON):
-        try:
-            os.remove(LOG_FILE_JSON)
-        except Exception:
-            pass
-    if os.path.exists("logs/worker.log"):
-        try:
-            with open("logs/worker.log", "w", encoding="utf-8") as f:
+    # Reset log files for the current mode so each run starts fresh (unless in live mode)
+    if os.environ.get("LOG_MODE") != "live":
+        if os.path.exists(LOG_FILE_CSV):
+            try:
+                os.remove(LOG_FILE_CSV)
+            except Exception:
                 pass
-        except Exception:
-            pass
+        if os.path.exists(LOG_FILE_JSON):
+            try:
+                os.remove(LOG_FILE_JSON)
+            except Exception:
+                pass
+        if os.path.exists("logs/worker.log"):
+            try:
+                with open("logs/worker.log", "w", encoding="utf-8") as f:
+                    pass
+            except Exception:
+                pass
 
     logger.info("╔══════════════════════════════════════════════════════════╗")
     logger.info("║      Carbon-Aware Scheduling System  — STARTING         ║")
@@ -193,7 +195,9 @@ def run(
         action_params={"task_name": "carbon-aware-batch", "payload_size": 256},
         execute_after_delay=True,  # set True to actually run after delay
     )
-    executor.clear_queue()
+    # Clear the queue on startup unless in live mode
+    if os.environ.get("LOG_MODE") != "live":
+        executor.clear_queue()
 
     if sim_mode:
         source = SimulatedCarbonSource(zone=zone)
@@ -208,7 +212,7 @@ def run(
         logger.info("\n─── Cycle %d / %d ─────────────────────────────────", cycle, cycles)
         
         # Read dynamic threshold (from Redis or JSON)
-        current_threshold = get_dynamic_threshold(executor._redis, threshold)
+        current_threshold = get_dynamic_threshold(executor._redis, threshold, os.environ.get("LOG_MODE", "sandbox"))
         scheduler.update_threshold(current_threshold)
 
         # Set dynamic task name for the current cycle
@@ -302,10 +306,20 @@ def parse_args() -> argparse.Namespace:
 
 if __name__ == "__main__":
     args = parse_args()
+
+    # Determine simulation mode based on --mode logic:
+    # 'sim' mode always runs in simulation.
+    # 'sandbox' and 'live' always run on real API data by default unless --sim is explicitly passed.
+    sim_mode = args.sim
+    if args.mode == "sim":
+        sim_mode = True
+    elif args.mode in ("sandbox", "live") and not args.sim:
+        sim_mode = False
+
     run(
         cycles     = args.cycles,
         zone       = args.zone,
         threshold  = args.threshold,
-        sim_mode   = args.sim,
+        sim_mode   = sim_mode,
         interval_s = args.interval,
     )
