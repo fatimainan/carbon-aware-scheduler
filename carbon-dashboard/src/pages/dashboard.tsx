@@ -12,14 +12,26 @@ import {
   FALLBACK_CONFIG,
 } from "@/data/simulationResults";
 import { useDashboardData } from "@/hooks/useDashboardData";
+import { useQueryClient } from "@tanstack/react-query";
+import { updateThreshold } from "@/lib/api";
 
 export default function Dashboard() {
+  const queryClient = useQueryClient();
   const { data, isLoading, isError, error, isFetching, dataUpdatedAt } =
     useDashboardData();
 
   const config = data?.config ?? FALLBACK_CONFIG;
   const cycles = data?.cycles ?? [];
   const metrics = data ? deriveMetrics(cycles, config) : EMPTY_METRICS;
+
+  const handleThresholdChange = async (newVal: number) => {
+    try {
+      await updateThreshold(newVal);
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+    } catch (err) {
+      console.error("Failed to update threshold:", err);
+    }
+  };
 
   return (
     <div className="min-h-[100dvh] bg-background text-foreground font-sans selection:bg-primary/30">
@@ -33,6 +45,7 @@ export default function Dashboard() {
           isFetching={isFetching}
           dataUpdatedAt={dataUpdatedAt}
           currentCarbon={cycles.length > 0 ? cycles[cycles.length - 1].carbonIntensity : null}
+          onThresholdChange={handleThresholdChange}
         />
 
         <DashboardStateBanner

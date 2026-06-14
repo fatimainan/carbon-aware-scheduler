@@ -30,6 +30,7 @@ from typing import Literal
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import redis
 
 # ── Config ──────────────────────────────────────────────────────────────────
 LOG_FILE_JSON = os.getenv("LOG_FILE_JSON", "logs/execution_log.json")
@@ -52,7 +53,42 @@ ALLOWED_ORIGINS = [
     if o.strip()
 ]
 
+# Redis client initialization
+REDIS_HOST = os.getenv("REDIS_HOST", "redis")
+try:
+    redis_client = redis.Redis(host=REDIS_HOST, port=6379, decode_responses=True)
+    redis_client.ping()
+except Exception:
+    redis_client = None
+
+
+def get_dynamic_threshold() -> float:
+    # 1. Try Redis first
+    if redis_client:
+        try:
+            val = redis_client.get("carbon_threshold")
+            if val is not None:
+                return float(val)
+        except Exception:
+            pass
+
+    # 2. Try shared JSON file
+    config_file = Path("logs/dynamic_config.json")
+    if config_file.exists():
+        try:
+            with config_file.open("r", encoding="utf-8") as f:
+                data = json.load(f)
+                return float(data["threshold"])
+        except Exception:
+            pass
+
+    return THRESHOLD
+
+
 # ── Models ──────────────────────────────────────────────────────────────────
+
+class ThresholdPayload(BaseModel):
+    threshold: float
 
 
 class CycleResult(BaseModel):
@@ -178,10 +214,10 @@ def _parse_ts(raw: str) -> datetime:
 def _config_from_records(records: list[dict]) -> RunConfig:
     """Use the most recent record's threshold/zone/action if available,
     otherwise fall back to env defaults."""
-    threshold, zone, action = THRESHOLD, ZONE, ACTION_NAME
+    threshold = get_dynamic_threshold()
+    zone, action = ZONE, ACTION_NAME
     if records:
         last = records[-1]
-        threshold = float(last.get("threshold", threshold))
         zone = last.get("zone", zone)
         action = last.get("action_name", action)
     return RunConfig(
@@ -198,6 +234,34 @@ def _config_from_records(records: list[dict]) -> RunConfig:
 @app.get("/api/healthz")
 def healthz() -> dict:
     return {"status": "ok"}
+
+
+@app.post("/api/threshold")
+def update_threshold(payload: ThresholdPayload) -> dict:
+    # 1. Update Redis
+    if redis_client:
+        try:
+            redis_client.set("carbon_threshold", str(payload.threshold))
+            # Also update current carbon state in redis if it exists so the worker container sees it immediately
+            raw_state = redis_client.get("current_carbon_state")
+            if raw_state:
+                state = json.loads(raw_state)
+                state["threshold"] = payload.threshold
+                redis_client.set("current_carbon_state", json.dumps(state))
+        except Exception as e:
+            # Let it fallback to write file
+            pass
+
+    # 2. Update dynamic_config.json file
+    config_file = Path("logs/dynamic_config.json")
+    try:
+        config_file.parent.mkdir(parents=True, exist_ok=True)
+        with config_file.open("w", encoding="utf-8") as f:
+            json.dump({"threshold": payload.threshold}, f)
+    except Exception as e:
+        return {"status": "error", "message": f"Failed to save dynamic config file: {str(e)}"}
+
+    return {"status": "success", "threshold": payload.threshold}
 
 
 @app.get("/api/dashboard", response_model=DashboardPayload)

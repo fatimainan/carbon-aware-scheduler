@@ -8,7 +8,10 @@ export const DASHBOARD_ENDPOINT = `${API_BASE_URL}/api/dashboard`;
 export async function fetchDashboardPayload(
   signal?: AbortSignal,
 ): Promise<DashboardPayload> {
-  const res = await fetch(DASHBOARD_ENDPOINT, {
+  const urlParams = new URLSearchParams(window.location.search);
+  const mode = urlParams.get("mode") || "sandbox";
+
+  const res = await fetch(`${DASHBOARD_ENDPOINT}?mode=${mode}`, {
     signal,
     headers: { Accept: "application/json" },
   });
@@ -26,4 +29,21 @@ export async function fetchDashboardPayload(
   }
 
   return data;
+}
+
+export async function updateThreshold(newThreshold: number): Promise<void> {
+  const res = await fetch(`${API_BASE_URL}/api/threshold`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({ threshold: newThreshold }),
+  });
+
+  if (!res.ok) {
+    throw new Error(
+      `Failed to update threshold: ${res.status} ${res.statusText}`,
+    );
+  }
 }

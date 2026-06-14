@@ -76,6 +76,32 @@ def setup_logging(level: str = "INFO") -> None:
 logger = logging.getLogger(__name__)
 
 
+from pathlib import Path
+
+def get_dynamic_threshold(redis_conn, default_val: float) -> float:
+    # 1. Try Redis first
+    if redis_conn:
+        try:
+            val = redis_conn.get("carbon_threshold")
+            if val is not None:
+                return float(val)
+        except Exception:
+            pass
+
+    # 2. Try shared JSON file
+    config_file = Path("logs/dynamic_config.json")
+    if config_file.exists():
+        try:
+            with config_file.open("r", encoding="utf-8") as f:
+                data = json.load(f)
+                return float(data["threshold"])
+        except Exception:
+            pass
+
+    return default_val
+
+
+
 # ── Simulation data source ────────────────────────────────────────────────────
 
 class SimulatedCarbonSource:
@@ -181,6 +207,10 @@ def run(
     for cycle in range(1, cycles + 1):
         logger.info("\n─── Cycle %d / %d ─────────────────────────────────", cycle, cycles)
         
+        # Read dynamic threshold (from Redis or JSON)
+        current_threshold = get_dynamic_threshold(executor._redis, threshold)
+        scheduler.update_threshold(current_threshold)
+
         # Set dynamic task name for the current cycle
         executor._action_params = {
             "task_name": f"Request #{cycle}",
@@ -197,7 +227,7 @@ def run(
                 )
             else:
                 reading = api_client.get_carbon_intensity(zone)
-            executor.update_carbon_state(reading.carbon_intensity, threshold)
+            executor.update_carbon_state(reading.carbon_intensity, current_threshold)
         except RuntimeError as exc:
             logger.error("[Main] Failed to fetch carbon intensity: %s", exc)
             logger.error("[Main] Skipping cycle %d.", cycle)
