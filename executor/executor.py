@@ -155,6 +155,7 @@ class Executor:
                 "carbon_at_delay": decision.carbon_intensity,
                 "threshold":      decision.threshold,
                 "zone":           decision.zone,
+                "mode":           os.environ.get("LOG_MODE", "sandbox"),
             }
             self._redis.rpush("carbon_task_queue", json.dumps(task))
             logger.info("[Executor] ⏳ Task pushed to Redis queue.")
@@ -178,9 +179,11 @@ class Executor:
 
     def update_carbon_state(self, intensity: float, threshold: float):
         if self._redis:
+            mode = os.environ.get("LOG_MODE", "sandbox")
             state = {"intensity": intensity, "threshold": threshold, "updated_at": time.time()}
+            self._redis.set(f"current_carbon_state_{mode}", json.dumps(state))
             self._redis.set("current_carbon_state", json.dumps(state))
-            logger.info("[Executor] 📡 Carbon state updated in Redis: %.1f gCO2", intensity)
+            logger.info("[Executor] 📡 Carbon state updated in Redis for mode %s: %.1f gCO2", mode, intensity)
 
     # ── Logging ───────────────────────────────────────────────────────────────
 

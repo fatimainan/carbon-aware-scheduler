@@ -32,7 +32,10 @@ export async function fetchDashboardPayload(
 }
 
 export async function updateThreshold(newThreshold: number): Promise<void> {
-  const res = await fetch(`${API_BASE_URL}/api/threshold`, {
+  const urlParams = new URLSearchParams(window.location.search);
+  const mode = urlParams.get("mode") || "sandbox";
+
+  const res = await fetch(`${API_BASE_URL}/api/threshold?mode=${mode}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

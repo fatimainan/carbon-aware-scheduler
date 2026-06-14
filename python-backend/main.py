@@ -53,49 +53,67 @@ ALLOWED_ORIGINS = [
     if o.strip()
 ]
 
-# Redis client initialization
+# Redis client helper (self-healing connection)
 IS_DOCKER = os.path.exists("/.dockerenv")
 DEFAULT_REDIS_HOST = "redis" if IS_DOCKER else "localhost"
 REDIS_HOST = os.getenv("REDIS_HOST", DEFAULT_REDIS_HOST)
 
-try:
-    redis_client = redis.Redis(
-        host=REDIS_HOST,
-        port=6379,
-        decode_responses=True,
-        socket_connect_timeout=1.5,
-        socket_timeout=1.5,
-    )
-    redis_client.ping()
-except Exception:
+_redis_client = None
+
+def get_redis_client():
+    global _redis_client
+    if _redis_client is not None:
+        try:
+            _redis_client.ping()
+            return _redis_client
+        except Exception:
+            _redis_client = None
+
+    try:
+        r = redis.Redis(
+            host=REDIS_HOST,
+            port=6379,
+            decode_responses=True,
+            socket_connect_timeout=1.5,
+            socket_timeout=1.5,
+        )
+        r.ping()
+        _redis_client = r
+        return _redis_client
+    except Exception:
+        pass
+
     if REDIS_HOST != "localhost":
         try:
-            redis_client = redis.Redis(
+            r = redis.Redis(
                 host="localhost",
                 port=6379,
                 decode_responses=True,
                 socket_connect_timeout=1.5,
                 socket_timeout=1.5,
             )
-            redis_client.ping()
+            r.ping()
+            _redis_client = r
+            return _redis_client
         except Exception:
-            redis_client = None
-    else:
-        redis_client = None
+            pass
+
+    return None
 
 
-def get_dynamic_threshold() -> float:
+def get_dynamic_threshold(mode: str = "sandbox") -> float:
     # 1. Try Redis first
-    if redis_client:
+    r = get_redis_client()
+    if r:
         try:
-            val = redis_client.get("carbon_threshold")
+            val = r.get(f"carbon_threshold_{mode}")
             if val is not None:
                 return float(val)
         except Exception:
             pass
 
     # 2. Try shared JSON file
-    config_file = Path("logs/dynamic_config.json")
+    config_file = Path(f"logs/dynamic_config_{mode}.json")
     if config_file.exists():
         try:
             with config_file.open("r", encoding="utf-8") as f:
@@ -233,10 +251,10 @@ def _parse_ts(raw: str) -> datetime:
     return datetime.fromisoformat(raw)
 
 
-def _config_from_records(records: list[dict]) -> RunConfig:
+def _config_from_records(records: list[dict], mode: str) -> RunConfig:
     """Use the most recent record's threshold/zone/action if available,
     otherwise fall back to env defaults."""
-    threshold = get_dynamic_threshold()
+    threshold = get_dynamic_threshold(mode)
     zone, action = ZONE, ACTION_NAME
     if records:
         last = records[-1]
@@ -259,23 +277,34 @@ def healthz() -> dict:
 
 
 @app.post("/api/threshold")
-def update_threshold(payload: ThresholdPayload) -> dict:
+def update_threshold(
+    payload: ThresholdPayload,
+    mode: str = Query(default="sandbox"),
+) -> dict:
     # 1. Update Redis
-    if redis_client:
+    r = get_redis_client()
+    if r:
         try:
-            redis_client.set("carbon_threshold", str(payload.threshold))
+            r.set(f"carbon_threshold_{mode}", str(payload.threshold))
             # Also update current carbon state in redis if it exists so the worker container sees it immediately
-            raw_state = redis_client.get("current_carbon_state")
+            raw_state = r.get(f"current_carbon_state_{mode}")
             if raw_state:
                 state = json.loads(raw_state)
                 state["threshold"] = payload.threshold
-                redis_client.set("current_carbon_state", json.dumps(state))
+                r.set(f"current_carbon_state_{mode}", json.dumps(state))
+
+            # Also update legacy/fallback if it matches the mode or is active
+            raw_state_legacy = r.get("current_carbon_state")
+            if raw_state_legacy:
+                state_legacy = json.loads(raw_state_legacy)
+                state_legacy["threshold"] = payload.threshold
+                r.set("current_carbon_state", json.dumps(state_legacy))
         except Exception as e:
             # Let it fallback to write file
             pass
 
     # 2. Update dynamic_config.json file
-    config_file = Path("logs/dynamic_config.json")
+    config_file = Path(f"logs/dynamic_config_{mode}.json")
     try:
         config_file.parent.mkdir(parents=True, exist_ok=True)
         with config_file.open("w", encoding="utf-8") as f:
@@ -293,10 +322,13 @@ def get_dashboard(
     log_path = _resolve_log_path(mode)
     records = _read_log_records(log_path)
     cycles = _to_cycles(records)
-    config = _config_from_records(records)
+    config = _config_from_records(records, mode)
 
-    # Read worker logs
-    worker_log_path = Path("logs/worker.log")
+    # Read worker logs (mode-specific)
+    worker_log_path = Path(f"logs/worker_{mode}.log")
+    if not worker_log_path.exists():
+        worker_log_path = Path("logs/worker.log")
+
     worker_logs = []
     if worker_log_path.exists():
         try:

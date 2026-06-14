@@ -38,6 +38,29 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+def log_worker_event(level: int, msg: str, *args, mode: str | None = None) -> None:
+    """Logs to stdout/logger and dynamically appends to mode-specific logs."""
+    formatted = msg % args if args else msg
+    logger.log(level, formatted)
+
+    # Format the log line precisely like basicConfig handler:
+    # %(asctime)s  %(levelname)-8s  %(message)s
+    from datetime import datetime
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]
+    level_name = logging.getLevelName(level)
+    line = f"{timestamp}  {level_name:<8}  {formatted}\n"
+
+    # Write to master file if needed (already written by basicConfig file handler to logs/worker.log)
+    # Write to mode-specific logs
+    modes = [mode] if mode else ["sandbox", "live"]
+    for m in modes:
+        log_file = f"logs/worker_{m}.log"
+        try:
+            with open(log_file, "a", encoding="utf-8") as f:
+                f.write(line)
+        except Exception:
+            pass
+
 # ── Yapılandırma ─────────────────────────────────────────────────────────────
 IS_DOCKER = os.path.exists("/.dockerenv")
 DEFAULT_REDIS_HOST = "redis" if IS_DOCKER else "localhost"
@@ -56,18 +79,19 @@ def get_redis_connection() -> redis.Redis:
                 socket_timeout=1.5,
             )
             r.ping()
-            logger.info("[Worker] Redis connected at %s:6379", REDIS_HOST)
+            log_worker_event(logging.INFO, "[Worker] Redis connected at %s:6379", REDIS_HOST)
             return r
         except Exception as e:
-            logger.warning("[Worker] Redis bağlantısı başarısız: %s — 5sn sonra tekrar.", e)
+            log_worker_event(logging.WARNING, "[Worker] Redis bağlantısı başarısız: %s — 5sn sonra tekrar.", e)
             time.sleep(5)
 
-def log_execution_event(task_name: str, zone: str, carbon: float, threshold: float, duration_ms: float) -> None:
-    from config import LOG_FILE_JSON, LOG_FILE_CSV
+def log_execution_event(task_name: str, zone: str, carbon: float, threshold: float, duration_ms: float, mode: str = "sandbox") -> None:
     import csv
     from datetime import datetime, timezone
 
     timestamp = datetime.now(timezone.utc).isoformat()
+    log_file_json = f"logs/execution_log_{mode}.json"
+    log_file_csv = f"logs/execution_log_{mode}.csv"
 
     # Log to JSON
     record = {
@@ -84,10 +108,10 @@ def log_execution_event(task_name: str, zone: str, carbon: float, threshold: flo
         "error":            None,
     }
     try:
-        with open(LOG_FILE_JSON, "a") as f:
+        with open(log_file_json, "a", encoding="utf-8") as f:
             f.write(json.dumps(record) + "\n")
     except Exception as e:
-        logger.warning("[Worker] JSON loglama hatası: %s", e)
+        log_worker_event(logging.WARNING, "[Worker] JSON loglama hatası: %s", e, mode=mode)
 
     # Log to CSV
     _CSV_FIELDS = [
@@ -109,10 +133,10 @@ def log_execution_event(task_name: str, zone: str, carbon: float, threshold: flo
         "error":                 "",
     }
     try:
-        with open(LOG_FILE_CSV, "a", newline="") as f:
+        with open(log_file_csv, "a", newline="", encoding="utf-8") as f:
             csv.DictWriter(f, fieldnames=_CSV_FIELDS).writerow(row)
     except Exception as e:
-        logger.warning("[Worker] CSV loglama hatası: %s", e)
+        log_worker_event(logging.WARNING, "[Worker] CSV loglama hatası: %s", e, mode=mode)
 
 def check_and_clear_logs(r: redis.Redis) -> None:
     try:
@@ -120,15 +144,21 @@ def check_and_clear_logs(r: redis.Redis) -> None:
             r.delete("clear_worker_logs")
             with open("logs/worker.log", "w", encoding="utf-8") as f:
                 pass
-            logger.info("[Worker] Log dosyası sıfırlandı.")
+            for m in ["sandbox", "live"]:
+                try:
+                    with open(f"logs/worker_{m}.log", "w", encoding="utf-8") as f:
+                        pass
+                except Exception:
+                    pass
+            log_worker_event(logging.INFO, "[Worker] Log dosyası sıfırlandı.")
     except Exception as e:
-        logger.warning("[Worker] Log sıfırlama hatası: %s", e)
+        log_worker_event(logging.WARNING, "[Worker] Log sıfırlama hatası: %s", e)
 
 def run_worker() -> None:
-    logger.info("[Worker] ═══════════════════════════════════════")
-    logger.info("[Worker] Carbon-Aware Queue Worker başlatıldı.")
-    logger.info("[Worker] Kuyruk: %s", QUEUE_NAME)
-    logger.info("[Worker] ═══════════════════════════════════════")
+    log_worker_event(logging.INFO, "[Worker] ═══════════════════════════════════════")
+    log_worker_event(logging.INFO, "[Worker] Carbon-Aware Queue Worker başlatıldı.")
+    log_worker_event(logging.INFO, "[Worker] Kuyruk: %s", QUEUE_NAME)
+    log_worker_event(logging.INFO, "[Worker] ═══════════════════════════════════════")
 
     r          = get_redis_connection()
     ow_invoker = OpenWhiskInvoker()
@@ -154,28 +184,34 @@ def run_worker() -> None:
             orig_carbon   = task.get("carbon_at_delay", "?")
             orig_thresh   = task.get("threshold", "?")
             task_name     = params.get("task_name", "N/A")
+            mode          = task.get("mode", "sandbox")
 
             now = time.time()
 
             # 2. Zaman Kontrolü (Gecikme süresi doldu mu?)
             if now < retry_after:
                 wait_secs = retry_after - now
-                logger.info("[Worker] ⏳ [%s] Zamanı gelmedi (%.0fsn kaldı). Geri itildi.", task_name, wait_secs)
+                log_worker_event(logging.INFO, "[Worker] ⏳ [%s] Zamanı gelmedi (%.0fsn kaldı). Geri itildi.", task_name, wait_secs, mode=mode)
                 r.rpush(QUEUE_NAME, json.dumps(task))
                 time.sleep(min(wait_secs, 5))
                 continue
 
             # 3. Karbon Kontrolü (Anlık karbon verisi uygun mu?)
-            raw_state = r.get("current_carbon_state")
+            raw_state = r.get(f"current_carbon_state_{mode}")
+            if not raw_state:
+                raw_state = r.get("current_carbon_state")
+
             if raw_state:
                 state = json.loads(raw_state)
                 curr_intensity = float(state["intensity"])
                 curr_threshold = float(state["threshold"])
 
                 if curr_intensity > curr_threshold:
-                    logger.info(
-                        "[Worker] ⏸️ [%s] Karbon hala yüksek (%.1f > %.1f). Kuyruğa geri itildi.",
-                        task_name, curr_intensity, curr_threshold
+                    log_worker_event(
+                        logging.INFO,
+                        "[Worker] ⏸️ [%s] Karbon hala yüksek (%.1f > %.1f). Kuyruğa geri itildi. [mode=%s]",
+                        task_name, curr_intensity, curr_threshold, mode,
+                        mode=mode
                     )
                     r.rpush(QUEUE_NAME, json.dumps(task))
                     time.sleep(5)  # Karbonun düşmesi için kısa bir mola
@@ -185,15 +221,17 @@ def run_worker() -> None:
                 display_carbon = curr_intensity
             else:
                 # Redis'te state yoksa orijinal veriyi kullan (fallback)
-                logger.warning("[Worker] ⚠️ [%s] Güncel karbon verisi Redis'te bulunamadı, bekletiliyor.", task_name)
+                log_worker_event(logging.WARNING, "[Worker] ⚠️ [%s] Güncel karbon verisi Redis'te bulunamadı (mode=%s), bekletiliyor.", task_name, mode, mode=mode)
                 r.rpush(QUEUE_NAME, json.dumps(task))
                 time.sleep(5)
                 continue
 
             # 4. Çalıştırma (Hem zaman hem karbon uygun)
-            logger.info(
+            log_worker_event(
+                logging.INFO,
                 "[Worker] 🟢 Koşullar uygun, [%s] çalıştırılıyor: action=%s (Karbon: %.1f)",
-                task_name, action_name, display_carbon
+                task_name, action_name, display_carbon,
+                mode=mode
             )
             
             result = ow_invoker.invoke(action_name, params)
@@ -208,23 +246,25 @@ def run_worker() -> None:
                     duration_ms = 0.0
 
             task_zone = task.get("zone", "DE")
-            log_execution_event(task_name, task_zone, display_carbon, curr_threshold, duration_ms)
+            log_execution_event(task_name, task_zone, display_carbon, curr_threshold, duration_ms, mode=mode)
 
             # Sonuç Loglama
-            logger.info(
+            log_worker_event(
+                logging.INFO,
                 "[Worker] ✅ [%s] Tamamlandı: status=%s  duration=%s ms",
                 task_name,
                 result.get("status", "ok"),
                 result.get("duration_ms", "N/A"),
+                mode=mode
             )
 
         except json.JSONDecodeError as e:
-            logger.error("[Worker] JSON parse hatası: %s", e)
+            log_worker_event(logging.ERROR, "[Worker] JSON parse hatası: %s", e)
         except redis.ConnectionError as e:
-            logger.error("[Worker] Redis bağlantısı kesildi: %s — yeniden bağlanılıyor.", e)
+            log_worker_event(logging.ERROR, "[Worker] Redis bağlantısı kesildi: %s — yeniden bağlanılıyor.", e)
             r = get_redis_connection()
         except Exception as e:
-            logger.error("[Worker] Beklenmedik hata: %s", e)
+            log_worker_event(logging.ERROR, "[Worker] Beklenmedik hata: %s", e)
             traceback.print_exc()
             time.sleep(5)
 
