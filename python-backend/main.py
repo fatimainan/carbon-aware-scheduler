@@ -135,6 +135,7 @@ class CycleResult(BaseModel):
     cycle: int
     timestampOffsetMin: float
     carbonIntensity: float
+    threshold: float
     decision: Literal["execute", "delay"]
     executionStatus: Literal["executed", "delayed", "queued"]
     executionDurationMs: float | None
@@ -234,6 +235,7 @@ def _to_cycles(records: list[dict]) -> list[CycleResult]:
                 cycle=idx,
                 timestampOffsetMin=round(offset_min, 2),
                 carbonIntensity=carbon,
+                threshold=threshold,
                 decision="execute" if decision == "execute" else "delay",
                 executionStatus=status if status in ("executed", "delayed", "queued")
                 else ("executed" if decision == "execute" else "delayed"),

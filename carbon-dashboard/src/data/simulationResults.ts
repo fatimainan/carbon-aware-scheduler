@@ -2,6 +2,7 @@ export interface CycleResult {
   cycle: number;
   timestampOffsetMin: number;
   carbonIntensity: number;
+  threshold: number;
   decision: "execute" | "delay";
   executionStatus: "executed" | "delayed" | "queued";
   executionDurationMs: number | null;
@@ -101,7 +102,7 @@ export function deriveMetrics(
       : 0;
 
   const carbonSavedGCO2 = delayedCycles.reduce(
-    (sum, c) => sum + (c.carbonIntensity - config.threshold),
+    (sum, c) => sum + (c.carbonIntensity - c.threshold),
     0,
   );
   const baselineTotalCarbon = carbonIntensities.reduce((sum, c) => sum + c, 0);
@@ -162,14 +163,14 @@ export const FALLBACK_CONFIG: RunConfig = {
 };
 
 export const FALLBACK_CYCLES: CycleResult[] = [
-  { cycle: 1,  timestampOffsetMin: 0,  carbonIntensity: 85,  decision: "execute", executionStatus: "executed", executionDurationMs: 0.31, scenario: "A" },
-  { cycle: 2,  timestampOffsetMin: 5,  carbonIntensity: 110, decision: "execute", executionStatus: "executed", executionDurationMs: 0.17, scenario: "A" },
-  { cycle: 3,  timestampOffsetMin: 10, carbonIntensity: 160, decision: "execute", executionStatus: "executed", executionDurationMs: 0.17, scenario: "A" },
-  { cycle: 4,  timestampOffsetMin: 15, carbonIntensity: 210, decision: "delay",   executionStatus: "delayed",  executionDurationMs: null, scenario: "B" },
-  { cycle: 5,  timestampOffsetMin: 20, carbonIntensity: 275, decision: "delay",   executionStatus: "delayed",  executionDurationMs: null, scenario: "B" },
-  { cycle: 6,  timestampOffsetMin: 25, carbonIntensity: 320, decision: "delay",   executionStatus: "delayed",  executionDurationMs: null, scenario: "B" },
-  { cycle: 7,  timestampOffsetMin: 30, carbonIntensity: 180, decision: "execute", executionStatus: "executed", executionDurationMs: 0.19, scenario: "A" },
-  { cycle: 8,  timestampOffsetMin: 35, carbonIntensity: 95,  decision: "execute", executionStatus: "executed", executionDurationMs: 0.16, scenario: "A" },
-  { cycle: 9,  timestampOffsetMin: 40, carbonIntensity: 240, decision: "delay",   executionStatus: "delayed",  executionDurationMs: null, scenario: "B" },
-  { cycle: 10, timestampOffsetMin: 45, carbonIntensity: 130, decision: "execute", executionStatus: "executed", executionDurationMs: 0.16, scenario: "A" },
+  { cycle: 1,  timestampOffsetMin: 0,  carbonIntensity: 85,  threshold: 200, decision: "execute", executionStatus: "executed", executionDurationMs: 0.31, scenario: "A" },
+  { cycle: 2,  timestampOffsetMin: 5,  carbonIntensity: 110, threshold: 200, decision: "execute", executionStatus: "executed", executionDurationMs: 0.17, scenario: "A" },
+  { cycle: 3,  timestampOffsetMin: 10, carbonIntensity: 160, threshold: 200, decision: "execute", executionStatus: "executed", executionDurationMs: 0.17, scenario: "A" },
+  { cycle: 4,  timestampOffsetMin: 15, carbonIntensity: 210, threshold: 200, decision: "delay",   executionStatus: "delayed",  executionDurationMs: null, scenario: "B" },
+  { cycle: 5,  timestampOffsetMin: 20, carbonIntensity: 275, threshold: 200, decision: "delay",   executionStatus: "delayed",  executionDurationMs: null, scenario: "B" },
+  { cycle: 6,  timestampOffsetMin: 25, carbonIntensity: 320, threshold: 200, decision: "delay",   executionStatus: "delayed",  executionDurationMs: null, scenario: "B" },
+  { cycle: 7,  timestampOffsetMin: 30, carbonIntensity: 180, threshold: 200, decision: "execute", executionStatus: "executed", executionDurationMs: 0.19, scenario: "A" },
+  { cycle: 8,  timestampOffsetMin: 35, carbonIntensity: 95,  threshold: 200, decision: "execute", executionStatus: "executed", executionDurationMs: 0.16, scenario: "A" },
+  { cycle: 9,  timestampOffsetMin: 40, carbonIntensity: 240, threshold: 200, decision: "delay",   executionStatus: "delayed",  executionDurationMs: null, scenario: "B" },
+  { cycle: 10, timestampOffsetMin: 45, carbonIntensity: 130, threshold: 200, decision: "execute", executionStatus: "executed", executionDurationMs: 0.16, scenario: "A" },
 ];
