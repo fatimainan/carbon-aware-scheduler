@@ -52,7 +52,7 @@ def log_worker_event(level: int, msg: str, *args, mode: str | None = None) -> No
 
     # Write to master file if needed (already written by basicConfig file handler to logs/worker.log)
     # Write to mode-specific logs
-    modes = [mode] if mode else ["sandbox", "live"]
+    modes = [mode] if mode else ["sim", "sandbox", "live"]
     for m in modes:
         log_file = f"logs/worker_{m}.log"
         try:
@@ -144,7 +144,7 @@ def check_and_clear_logs(r: redis.Redis) -> None:
             r.delete("clear_worker_logs")
             with open("logs/worker.log", "w", encoding="utf-8") as f:
                 pass
-            for m in ["sandbox", "live"]:
+            for m in ["sim", "sandbox", "live"]:
                 try:
                     with open(f"logs/worker_{m}.log", "w", encoding="utf-8") as f:
                         pass

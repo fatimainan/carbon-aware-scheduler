@@ -159,14 +159,18 @@ def run(
 
     # Reset log files for the current mode so each run starts fresh (unless in live mode)
     if os.environ.get("LOG_MODE") != "live":
-        if os.path.exists(LOG_FILE_CSV):
+        current_mode = os.environ.get("LOG_MODE", "sandbox")
+        csv_file = f"logs/execution_log_{current_mode}.csv"
+        json_file = f"logs/execution_log_{current_mode}.json"
+        
+        if os.path.exists(csv_file):
             try:
-                os.remove(LOG_FILE_CSV)
+                os.remove(csv_file)
             except Exception:
                 pass
-        if os.path.exists(LOG_FILE_JSON):
+        if os.path.exists(json_file):
             try:
-                os.remove(LOG_FILE_JSON)
+                os.remove(json_file)
             except Exception:
                 pass
         if os.path.exists("logs/worker.log"):
